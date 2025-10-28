@@ -1,0 +1,198 @@
+syntax = "proto3";
+
+package accountsv1;
+
+option go_package = "github.com/ArcaTechCo/PipsendProtos/gen/go/accounts/v1;accountsv1";
+
+// Accounts service manages margin holds for trading accounts
+service Accounts {
+  // CreateHold creates a new margin hold on an account
+  rpc CreateHold(CreateHoldRequest) returns (CreateHoldResponse);
+  
+  // UseHold marks a hold as used/consumed
+  rpc UseHold(UseHoldRequest) returns (UseHoldResponse);
+  
+  // ReleaseHold releases a margin hold back to available balance
+  rpc ReleaseHold(ReleaseHoldRequest) returns (ReleaseHoldResponse);
+  
+  // GetAccount retrieves complete account information including balance, equity, and margin
+  rpc GetAccount(GetAccountRequest) returns (GetAccountResponse);
+  
+  // GetTradingGroupPolicy retrieves trading group policies and configurations
+  rpc GetTradingGroupPolicy(GetTradingGroupPolicyRequest) returns (GetTradingGroupPolicyResponse);
+  
+  // Deposit adds funds to an account balance
+  rpc Deposit(DepositRequest) returns (DepositResponse);
+  
+  // Withdraw removes funds from an account balance
+  rpc Withdraw(WithdrawRequest) returns (WithdrawResponse);
+}
+
+// Money represents a monetary amount with currency
+message Money {
+  string currency = 1;  // ISO 4217 currency code (e.g., "USD", "EUR")
+  string amount = 2;    // Decimal amount as string to avoid precision loss
+}
+
+// CreateHoldRequest creates a new margin hold
+message CreateHoldRequest {
+  uint64 account_id = 1;           // Account ID to create hold on
+  Money money = 2;                 // Amount to hold
+  string request_id = 3;           // Idempotency key
+  string reference = 4;            // External reference (e.g., order ID)
+  map<string, string> metadata = 5; // Additional metadata
+}
+
+// CreateHoldResponse returns the created hold details
+message CreateHoldResponse {
+  string hold_id = 1;              // Unique hold identifier (HOLD_<ULID>)
+  uint64 account_id = 2;           // Account ID
+  Money money = 3;                 // Amount held
+  string created_at = 4;           // ISO 8601 timestamp
+}
+
+// UseHoldRequest marks a hold as used
+message UseHoldRequest {
+  string hold_id = 1;              // Hold ID to use
+  string request_id = 2;           // Idempotency key
+  Money money = 3;                 // Amount to use (optional, defaults to full hold)
+  string reference = 4;            // External reference
+  map<string, string> metadata = 5; // Additional metadata
+}
+
+// UseHoldResponse confirms the hold usage
+message UseHoldResponse {
+  string hold_id = 1;              // Hold ID that was used
+  uint64 account_id = 2;           // Account ID
+  Money money = 3;                 // Amount used
+  string used_at = 4;              // ISO 8601 timestamp
+}
+
+// ReleaseHoldRequest releases a hold back to available balance
+message ReleaseHoldRequest {
+  string hold_id = 1;              // Hold ID to release
+  string request_id = 2;           // Idempotency key
+  Money money = 3;                 // Amount to release (optional, defaults to full hold)
+  string reference = 4;            // External reference
+  map<string, string> metadata = 5; // Additional metadata
+}
+
+// ReleaseHoldResponse confirms the hold release
+message ReleaseHoldResponse {
+  string hold_id = 1;              // Hold ID that was released
+  uint64 account_id = 2;           // Account ID
+  Money money = 3;                 // Amount released
+  string released_at = 4;          // ISO 8601 timestamp
+}
+
+// GetAccountRequest requests account information
+message GetAccountRequest {
+  int64 account_id = 1;            // Account ID to retrieve
+}
+
+// AccountInfo contains complete account information
+message AccountInfo {
+  int64 account_id = 1;            // Account ID
+  int64 trading_group_id = 2;      // Trading group ID
+  string currency = 3;             // Account currency: "USD", "EUR"
+  string balance = 4;              // Total balance (deposits - withdrawals)
+  string equity = 5;               // Equity (balance + unrealized PnL)
+  string used_margin = 6;          // Margin used in open positions
+  string free_margin = 7;          // Available free margin
+  string margin_level = 8;         // Margin level percentage (equity/used_margin * 100)
+  bool is_active = 9;              // Whether the account is active
+}
+
+// GetAccountResponse returns account information
+message GetAccountResponse {
+  AccountInfo account = 1;         // Account information
+}
+
+// GetTradingGroupPolicyRequest requests trading group policy
+message GetTradingGroupPolicyRequest {
+  int64 trading_group_id = 1;      // Trading group ID to retrieve
+}
+
+// TradingGroupPolicyInfo contains trading group policies and configurations
+message TradingGroupPolicyInfo {
+  int64 trading_group_id = 1;      // Trading group ID
+  string name = 2;                 // Group name
+  string company = 3;              // Company name
+  string type = 4;                 // Group type
+  
+  // Trading configurations
+  bool is_hedging = 5;             // true = hedging mode, false = netting mode
+  bool enable_ea = 6;              // Allow Expert Advisors
+  bool enable_swaps = 7;           // Allow swaps
+  bool enable_trailing_stop = 8;   // Allow trailing stops
+  
+  // Margin and risk configurations
+  double margin_call = 9;          // Margin call level (0.50 = 50%)
+  double stop_out = 10;            // Stop out level (0.20 = 20%)
+  bool stop_out_fully = 11;        // Stop out entire account
+  bool stop_is_percentage = 12;    // Whether stop out is percentage
+  
+  // Balance configurations
+  bool allow_negative_balance = 13;        // Allow negative balance
+  bool allow_credit_negative = 14;         // Allow negative credit
+  bool compensate_negative_balance = 15;   // Compensate negative balance
+  bool withdraw_credit_after_negative = 16; // Withdraw credit after negative
+  
+  // Commission configurations
+  string comission_type = 17;      // Commission type: "percentage", "fixed"
+  string comission_period = 18;    // Period: "day", "week", "month"
+  bool comission_percent = 19;     // Whether commission is percentage
+  string comission_mode = 20;      // Mode: "fixed", "variable"
+  double comission_value = 21;     // Commission value
+  
+  // Other configurations
+  int32 inactivity_period = 22;    // Inactivity period (days)
+  int32 sort_order = 23;           // Display sort order
+  
+  // Hierarchy
+  int64 parent_id = 24;            // Parent group ID (0 if root)
+  string group_path = 25;          // Hierarchical path: "Standard/VIP/Demo"
+}
+
+// GetTradingGroupPolicyResponse returns trading group policy
+message GetTradingGroupPolicyResponse {
+  TradingGroupPolicyInfo policy = 1; // Trading group policy information
+}
+
+// DepositRequest requests a deposit to an account
+message DepositRequest {
+  uint64 account_id = 1;           // Account ID to deposit to
+  double amount = 2;               // Amount to deposit (must be positive)
+  string description = 3;          // Optional description for the transaction
+  string request_id = 4;           // Idempotency key
+  string reference = 5;            // External reference (e.g., transaction ID)
+  map<string, string> metadata = 6; // Additional metadata
+}
+
+// DepositResponse returns the updated account after deposit
+message DepositResponse {
+  uint64 account_id = 1;           // Account ID
+  double balance = 2;              // Updated balance after deposit
+  double amount_deposited = 3;     // Amount that was deposited
+  string transaction_id = 4;       // Ledger entry ID
+  string created_at = 5;           // ISO 8601 timestamp
+}
+
+// WithdrawRequest requests a withdrawal from an account
+message WithdrawRequest {
+  uint64 account_id = 1;           // Account ID to withdraw from
+  double amount = 2;               // Amount to withdraw (must be positive)
+  string description = 3;          // Optional description for the transaction
+  string request_id = 4;           // Idempotency key
+  string reference = 5;            // External reference (e.g., transaction ID)
+  map<string, string> metadata = 6; // Additional metadata
+}
+
+// WithdrawResponse returns the updated account after withdrawal
+message WithdrawResponse {
+  uint64 account_id = 1;           // Account ID
+  double balance = 2;              // Updated balance after withdrawal
+  double amount_withdrawn = 3;     // Amount that was withdrawn
+  string transaction_id = 4;       // Ledger entry ID
+  string created_at = 5;           // ISO 8601 timestamp
+}

@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+package tradingmetrics.v1;
+
+option go_package = "github.com/ArcaTechCo/PipsendProtos/gen/go/tradingmetrics/v1;tradingmetricsv1";
+
+// TradingMetricsService provee métricas agregadas de posiciones para AccountCore
+service TradingMetricsService {
+  // GetAccountMetrics retorna métricas agregadas de todas las posiciones de una cuenta
+  rpc GetAccountMetrics(GetAccountMetricsRequest) returns (GetAccountMetricsResponse);
+}
+
+// GetAccountMetricsRequest solicita métricas de una cuenta específica
+message GetAccountMetricsRequest {
+  // ID de la cuenta
+  int64 account_id = 1;
+  
+  // Leverage de la cuenta (ej: 100.0 para leverage 1:100)
+  double account_leverage = 2;
+  
+  // Código ISO de la moneda de la cuenta (ej: "USD", "EUR", "GBP")
+  string account_currency = 3;
+  
+  // Modo de trading: true = Hedging (múltiples posiciones por símbolo), false = Netting (una posición por símbolo)
+  bool is_hedging = 4;
+}
+
+// GetAccountMetricsResponse contiene las métricas calculadas
+message GetAccountMetricsResponse {
+  // ID de la cuenta
+  int64 account_id = 1;
+  
+  // PnL no realizado total en account_currency
+  double total_unrealized_pnl = 2;
+  
+  // Margen usado total en account_currency
+  double total_used_margin = 3;
+  
+  // Exposición total en account_currency
+  double total_exposure = 4;
+  
+  // Cantidad de posiciones abiertas
+  int32 open_positions_count = 5;
+  
+  // Timestamp del cálculo (epoch milliseconds)
+  int64 last_updated_at = 6;
+  
+  // Timestamp del precio más antiguo usado en el cálculo (epoch milliseconds)
+  int64 last_price_update_at = 7;
+  
+  // true si la respuesta viene de cache
+  bool is_cached = 8;
+  
+  // true si algún precio tiene más de 1 hora de antigüedad
+  bool has_stale_prices = 9;
+}

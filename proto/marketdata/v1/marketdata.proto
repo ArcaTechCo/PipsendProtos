@@ -1,0 +1,115 @@
+syntax = "proto3";
+
+package marketdata.v1;
+
+option go_package = "github.com/ArcaTechCo/PipsendProtos/gen/go/marketdata/v1;marketdatav1";
+
+// MarketData service provides real-time and cached market data access
+service MarketData {
+  // GetTopOfBook returns the current best bid/ask for a symbol
+  rpc GetTopOfBook(GetTopOfBookRequest) returns (GetTopOfBookResponse);
+  
+  // GetMarkPrice returns the current mark price for a symbol
+  rpc GetMarkPrice(GetMarkPriceRequest) returns (GetMarkPriceResponse);
+  
+  // Convert performs currency conversion between two symbols
+  rpc Convert(ConvertRequest) returns (ConvertResponse);
+  
+  // GetSymbol returns a symbol by its ID
+  rpc GetSymbol(GetSymbolRequest) returns (GetSymbolResponse);
+  
+  // GetSymbolByCode returns a symbol by its code
+  rpc GetSymbolByCode(GetSymbolByCodeRequest) returns (GetSymbolResponse);
+  
+  // ListSymbols returns a list of symbols with optional active filter
+  rpc ListSymbols(ListSymbolsRequest) returns (ListSymbolsResponse);
+}
+
+// GetTopOfBookRequest requests top of book data for a symbol
+message GetTopOfBookRequest {
+  string symbol = 1; // Symbol code (e.g., "BTCUSD")
+}
+
+// GetTopOfBookResponse returns bid/ask prices with timestamp
+message GetTopOfBookResponse {
+  string symbol = 1;           // Symbol code
+  string bid = 2;              // Bid price as decimal string
+  string ask = 3;              // Ask price as decimal string
+  int64 ts_unix_ms = 4;        // Timestamp in Unix milliseconds
+  string source = 5;           // Data source (CACHE, DB, COMPUTED)
+}
+
+// GetMarkPriceRequest requests mark price for a symbol
+message GetMarkPriceRequest {
+  string symbol = 1; // Symbol code (e.g., "BTCUSD")
+}
+
+// GetMarkPriceResponse returns mark price with timestamp
+message GetMarkPriceResponse {
+  string symbol = 1;           // Symbol code
+  string mark_price = 2;       // Mark price as decimal string
+  int64 ts_unix_ms = 3;        // Timestamp in Unix milliseconds
+  string source = 4;           // Data source (CACHE, DB, COMPUTED)
+  string method = 5;           // Pricing method (MID, LAST, WEIGHTED)
+}
+
+// ConvertRequest requests currency conversion
+message ConvertRequest {
+  string amount = 1;           // Amount to convert as decimal string
+  string from = 2;             // Source currency code
+  string to = 3;               // Target currency code
+}
+
+// ConvertResponse returns converted amount with rate
+message ConvertResponse {
+  string amount = 1;           // Original amount
+  string from = 2;             // Source currency
+  string to = 3;               // Target currency
+  string converted_amount = 4; // Converted amount as decimal string
+  string rate = 5;             // Exchange rate as decimal string
+  int64 ts_unix_ms = 6;        // Timestamp in Unix milliseconds
+  string path = 7;             // Conversion path (DIRECT, VIA_USD)
+}
+
+// GetSymbolRequest requests a symbol by ID
+message GetSymbolRequest {
+  int64 symbol_id = 1; // Symbol ID
+}
+
+// GetSymbolByCodeRequest requests a symbol by code
+message GetSymbolByCodeRequest {
+  string code = 1; // Symbol code (e.g., "ETHUSD", "BTCUSD")
+}
+
+// ListSymbolsRequest requests a list of symbols
+message ListSymbolsRequest {
+  bool active_only = 1; // true = only active symbols, false = all symbols
+}
+
+// SymbolInfo contains complete symbol configuration
+message SymbolInfo {
+  int64 id = 1;                   // Symbol ID
+  string code = 2;                // Symbol code: "ETHUSD", "BTCUSD", etc.
+  string name = 3;                // Symbol name/description
+  string contract_size = 4;       // Contract size: "1", "100000"
+  int32 digits = 5;               // Decimal places: 2, 5, etc.
+  string tick_size = 6;           // Tick size: "0.01", "0.00001"
+  string min_trade_size = 7;      // Minimum trade size: "0.01"
+  string max_trade_size = 8;      // Maximum trade size: "100.00"
+  string volume_step = 9;         // Volume step: "0.01"
+  string required_margin = 10;    // Required margin: "0.01" (1%)
+  string quote_currency = 11;     // Quote currency: "USD"
+  string base_currency = 12;      // Base currency: "ETH", "BTC"
+  bool is_active = 13;            // Whether the symbol is active
+  string point_value = 14;        // Point value: "10.00" (value per point movement)
+}
+
+// GetSymbolResponse returns a single symbol
+message GetSymbolResponse {
+  SymbolInfo symbol = 1;
+}
+
+// ListSymbolsResponse returns a list of symbols
+message ListSymbolsResponse {
+  repeated SymbolInfo symbols = 1;
+}
