@@ -1376,6 +1376,197 @@ func (x *WithdrawResponse) GetCreatedAt() string {
 	return ""
 }
 
+// GetAccountByLoginRequest requests account information by login
+type GetAccountByLoginRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Login         string                 `protobuf:"bytes,1,opt,name=login,proto3" json:"login,omitempty"` // Trading account login
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetAccountByLoginRequest) Reset() {
+	*x = GetAccountByLoginRequest{}
+	mi := &file_accounts_v1_accounts_proto_msgTypes[17]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetAccountByLoginRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetAccountByLoginRequest) ProtoMessage() {}
+
+func (x *GetAccountByLoginRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_accounts_v1_accounts_proto_msgTypes[17]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetAccountByLoginRequest.ProtoReflect.Descriptor instead.
+func (*GetAccountByLoginRequest) Descriptor() ([]byte, []int) {
+	return file_accounts_v1_accounts_proto_rawDescGZIP(), []int{17}
+}
+
+func (x *GetAccountByLoginRequest) GetLogin() string {
+	if x != nil {
+		return x.Login
+	}
+	return ""
+}
+
+// AccountByLoginInfo contains basic account information retrieved by login
+type AccountByLoginInfo struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	Id             int64                  `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                                 // Account ID
+	Login          string                 `protobuf:"bytes,2,opt,name=login,proto3" json:"login,omitempty"`                                            // Trading account login
+	TradingGroupId int64                  `protobuf:"varint,3,opt,name=trading_group_id,json=tradingGroupId,proto3" json:"trading_group_id,omitempty"` // Trading group ID
+	State          string                 `protobuf:"bytes,4,opt,name=state,proto3" json:"state,omitempty"`                                            // Account state (e.g., "active", "inactive")
+	Balance        string                 `protobuf:"bytes,5,opt,name=balance,proto3" json:"balance,omitempty"`                                        // Account balance
+	Credit         string                 `protobuf:"bytes,6,opt,name=credit,proto3" json:"credit,omitempty"`                                          // Account credit
+	Leverage       int32                  `protobuf:"varint,7,opt,name=leverage,proto3" json:"leverage,omitempty"`                                     // Account leverage (e.g., 100 for 1:100)
+	Currency       string                 `protobuf:"bytes,8,opt,name=currency,proto3" json:"currency,omitempty"`                                      // Account currency: "USD", "EUR"
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *AccountByLoginInfo) Reset() {
+	*x = AccountByLoginInfo{}
+	mi := &file_accounts_v1_accounts_proto_msgTypes[18]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *AccountByLoginInfo) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AccountByLoginInfo) ProtoMessage() {}
+
+func (x *AccountByLoginInfo) ProtoReflect() protoreflect.Message {
+	mi := &file_accounts_v1_accounts_proto_msgTypes[18]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AccountByLoginInfo.ProtoReflect.Descriptor instead.
+func (*AccountByLoginInfo) Descriptor() ([]byte, []int) {
+	return file_accounts_v1_accounts_proto_rawDescGZIP(), []int{18}
+}
+
+func (x *AccountByLoginInfo) GetId() int64 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *AccountByLoginInfo) GetLogin() string {
+	if x != nil {
+		return x.Login
+	}
+	return ""
+}
+
+func (x *AccountByLoginInfo) GetTradingGroupId() int64 {
+	if x != nil {
+		return x.TradingGroupId
+	}
+	return 0
+}
+
+func (x *AccountByLoginInfo) GetState() string {
+	if x != nil {
+		return x.State
+	}
+	return ""
+}
+
+func (x *AccountByLoginInfo) GetBalance() string {
+	if x != nil {
+		return x.Balance
+	}
+	return ""
+}
+
+func (x *AccountByLoginInfo) GetCredit() string {
+	if x != nil {
+		return x.Credit
+	}
+	return ""
+}
+
+func (x *AccountByLoginInfo) GetLeverage() int32 {
+	if x != nil {
+		return x.Leverage
+	}
+	return 0
+}
+
+func (x *AccountByLoginInfo) GetCurrency() string {
+	if x != nil {
+		return x.Currency
+	}
+	return ""
+}
+
+// GetAccountByLoginResponse returns account information
+type GetAccountByLoginResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Account       *AccountByLoginInfo    `protobuf:"bytes,1,opt,name=account,proto3" json:"account,omitempty"` // Account information
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetAccountByLoginResponse) Reset() {
+	*x = GetAccountByLoginResponse{}
+	mi := &file_accounts_v1_accounts_proto_msgTypes[19]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetAccountByLoginResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetAccountByLoginResponse) ProtoMessage() {}
+
+func (x *GetAccountByLoginResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_accounts_v1_accounts_proto_msgTypes[19]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetAccountByLoginResponse.ProtoReflect.Descriptor instead.
+func (*GetAccountByLoginResponse) Descriptor() ([]byte, []int) {
+	return file_accounts_v1_accounts_proto_rawDescGZIP(), []int{19}
+}
+
+func (x *GetAccountByLoginResponse) GetAccount() *AccountByLoginInfo {
+	if x != nil {
+		return x.Account
+	}
+	return nil
+}
+
 var File_accounts_v1_accounts_proto protoreflect.FileDescriptor
 
 const file_accounts_v1_accounts_proto_rawDesc = "" +
@@ -1530,7 +1721,20 @@ const file_accounts_v1_accounts_proto_rawDesc = "" +
 	"\x10amount_withdrawn\x18\x03 \x01(\x01R\x0famountWithdrawn\x12%\n" +
 	"\x0etransaction_id\x18\x04 \x01(\tR\rtransactionId\x12\x1d\n" +
 	"\n" +
-	"created_at\x18\x05 \x01(\tR\tcreatedAt2\xb1\x04\n" +
+	"created_at\x18\x05 \x01(\tR\tcreatedAt\"0\n" +
+	"\x18GetAccountByLoginRequest\x12\x14\n" +
+	"\x05login\x18\x01 \x01(\tR\x05login\"\xe4\x01\n" +
+	"\x12AccountByLoginInfo\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x14\n" +
+	"\x05login\x18\x02 \x01(\tR\x05login\x12(\n" +
+	"\x10trading_group_id\x18\x03 \x01(\x03R\x0etradingGroupId\x12\x14\n" +
+	"\x05state\x18\x04 \x01(\tR\x05state\x12\x18\n" +
+	"\abalance\x18\x05 \x01(\tR\abalance\x12\x16\n" +
+	"\x06credit\x18\x06 \x01(\tR\x06credit\x12\x1a\n" +
+	"\bleverage\x18\a \x01(\x05R\bleverage\x12\x1a\n" +
+	"\bcurrency\x18\b \x01(\tR\bcurrency\"U\n" +
+	"\x19GetAccountByLoginResponse\x128\n" +
+	"\aaccount\x18\x01 \x01(\v2\x1e.accountsv1.AccountByLoginInfoR\aaccount2\x93\x05\n" +
 	"\bAccounts\x12K\n" +
 	"\n" +
 	"CreateHold\x12\x1d.accountsv1.CreateHoldRequest\x1a\x1e.accountsv1.CreateHoldResponse\x12B\n" +
@@ -1540,7 +1744,8 @@ const file_accounts_v1_accounts_proto_rawDesc = "" +
 	"GetAccount\x12\x1d.accountsv1.GetAccountRequest\x1a\x1e.accountsv1.GetAccountResponse\x12l\n" +
 	"\x15GetTradingGroupPolicy\x12(.accountsv1.GetTradingGroupPolicyRequest\x1a).accountsv1.GetTradingGroupPolicyResponse\x12B\n" +
 	"\aDeposit\x12\x1a.accountsv1.DepositRequest\x1a\x1b.accountsv1.DepositResponse\x12E\n" +
-	"\bWithdraw\x12\x1b.accountsv1.WithdrawRequest\x1a\x1c.accountsv1.WithdrawResponseBCZAgithub.com/ArcaTechCo/PipsendProtos/gen/go/accounts/v1;accountsv1b\x06proto3"
+	"\bWithdraw\x12\x1b.accountsv1.WithdrawRequest\x1a\x1c.accountsv1.WithdrawResponse\x12`\n" +
+	"\x11GetAccountByLogin\x12$.accountsv1.GetAccountByLoginRequest\x1a%.accountsv1.GetAccountByLoginResponseBCZAgithub.com/ArcaTechCo/PipsendProtos/gen/go/accounts/v1;accountsv1b\x06proto3"
 
 var (
 	file_accounts_v1_accounts_proto_rawDescOnce sync.Once
@@ -1554,7 +1759,7 @@ func file_accounts_v1_accounts_proto_rawDescGZIP() []byte {
 	return file_accounts_v1_accounts_proto_rawDescData
 }
 
-var file_accounts_v1_accounts_proto_msgTypes = make([]protoimpl.MessageInfo, 22)
+var file_accounts_v1_accounts_proto_msgTypes = make([]protoimpl.MessageInfo, 25)
 var file_accounts_v1_accounts_proto_goTypes = []any{
 	(*Money)(nil),                         // 0: accountsv1.Money
 	(*CreateHoldRequest)(nil),             // 1: accountsv1.CreateHoldRequest
@@ -1573,45 +1778,51 @@ var file_accounts_v1_accounts_proto_goTypes = []any{
 	(*DepositResponse)(nil),               // 14: accountsv1.DepositResponse
 	(*WithdrawRequest)(nil),               // 15: accountsv1.WithdrawRequest
 	(*WithdrawResponse)(nil),              // 16: accountsv1.WithdrawResponse
-	nil,                                   // 17: accountsv1.CreateHoldRequest.MetadataEntry
-	nil,                                   // 18: accountsv1.UseHoldRequest.MetadataEntry
-	nil,                                   // 19: accountsv1.ReleaseHoldRequest.MetadataEntry
-	nil,                                   // 20: accountsv1.DepositRequest.MetadataEntry
-	nil,                                   // 21: accountsv1.WithdrawRequest.MetadataEntry
+	(*GetAccountByLoginRequest)(nil),      // 17: accountsv1.GetAccountByLoginRequest
+	(*AccountByLoginInfo)(nil),            // 18: accountsv1.AccountByLoginInfo
+	(*GetAccountByLoginResponse)(nil),     // 19: accountsv1.GetAccountByLoginResponse
+	nil,                                   // 20: accountsv1.CreateHoldRequest.MetadataEntry
+	nil,                                   // 21: accountsv1.UseHoldRequest.MetadataEntry
+	nil,                                   // 22: accountsv1.ReleaseHoldRequest.MetadataEntry
+	nil,                                   // 23: accountsv1.DepositRequest.MetadataEntry
+	nil,                                   // 24: accountsv1.WithdrawRequest.MetadataEntry
 }
 var file_accounts_v1_accounts_proto_depIdxs = []int32{
 	0,  // 0: accountsv1.CreateHoldRequest.money:type_name -> accountsv1.Money
-	17, // 1: accountsv1.CreateHoldRequest.metadata:type_name -> accountsv1.CreateHoldRequest.MetadataEntry
+	20, // 1: accountsv1.CreateHoldRequest.metadata:type_name -> accountsv1.CreateHoldRequest.MetadataEntry
 	0,  // 2: accountsv1.CreateHoldResponse.money:type_name -> accountsv1.Money
 	0,  // 3: accountsv1.UseHoldRequest.money:type_name -> accountsv1.Money
-	18, // 4: accountsv1.UseHoldRequest.metadata:type_name -> accountsv1.UseHoldRequest.MetadataEntry
+	21, // 4: accountsv1.UseHoldRequest.metadata:type_name -> accountsv1.UseHoldRequest.MetadataEntry
 	0,  // 5: accountsv1.UseHoldResponse.money:type_name -> accountsv1.Money
 	0,  // 6: accountsv1.ReleaseHoldRequest.money:type_name -> accountsv1.Money
-	19, // 7: accountsv1.ReleaseHoldRequest.metadata:type_name -> accountsv1.ReleaseHoldRequest.MetadataEntry
+	22, // 7: accountsv1.ReleaseHoldRequest.metadata:type_name -> accountsv1.ReleaseHoldRequest.MetadataEntry
 	0,  // 8: accountsv1.ReleaseHoldResponse.money:type_name -> accountsv1.Money
 	8,  // 9: accountsv1.GetAccountResponse.account:type_name -> accountsv1.AccountInfo
 	11, // 10: accountsv1.GetTradingGroupPolicyResponse.policy:type_name -> accountsv1.TradingGroupPolicyInfo
-	20, // 11: accountsv1.DepositRequest.metadata:type_name -> accountsv1.DepositRequest.MetadataEntry
-	21, // 12: accountsv1.WithdrawRequest.metadata:type_name -> accountsv1.WithdrawRequest.MetadataEntry
-	1,  // 13: accountsv1.Accounts.CreateHold:input_type -> accountsv1.CreateHoldRequest
-	3,  // 14: accountsv1.Accounts.UseHold:input_type -> accountsv1.UseHoldRequest
-	5,  // 15: accountsv1.Accounts.ReleaseHold:input_type -> accountsv1.ReleaseHoldRequest
-	7,  // 16: accountsv1.Accounts.GetAccount:input_type -> accountsv1.GetAccountRequest
-	10, // 17: accountsv1.Accounts.GetTradingGroupPolicy:input_type -> accountsv1.GetTradingGroupPolicyRequest
-	13, // 18: accountsv1.Accounts.Deposit:input_type -> accountsv1.DepositRequest
-	15, // 19: accountsv1.Accounts.Withdraw:input_type -> accountsv1.WithdrawRequest
-	2,  // 20: accountsv1.Accounts.CreateHold:output_type -> accountsv1.CreateHoldResponse
-	4,  // 21: accountsv1.Accounts.UseHold:output_type -> accountsv1.UseHoldResponse
-	6,  // 22: accountsv1.Accounts.ReleaseHold:output_type -> accountsv1.ReleaseHoldResponse
-	9,  // 23: accountsv1.Accounts.GetAccount:output_type -> accountsv1.GetAccountResponse
-	12, // 24: accountsv1.Accounts.GetTradingGroupPolicy:output_type -> accountsv1.GetTradingGroupPolicyResponse
-	14, // 25: accountsv1.Accounts.Deposit:output_type -> accountsv1.DepositResponse
-	16, // 26: accountsv1.Accounts.Withdraw:output_type -> accountsv1.WithdrawResponse
-	20, // [20:27] is the sub-list for method output_type
-	13, // [13:20] is the sub-list for method input_type
-	13, // [13:13] is the sub-list for extension type_name
-	13, // [13:13] is the sub-list for extension extendee
-	0,  // [0:13] is the sub-list for field type_name
+	23, // 11: accountsv1.DepositRequest.metadata:type_name -> accountsv1.DepositRequest.MetadataEntry
+	24, // 12: accountsv1.WithdrawRequest.metadata:type_name -> accountsv1.WithdrawRequest.MetadataEntry
+	18, // 13: accountsv1.GetAccountByLoginResponse.account:type_name -> accountsv1.AccountByLoginInfo
+	1,  // 14: accountsv1.Accounts.CreateHold:input_type -> accountsv1.CreateHoldRequest
+	3,  // 15: accountsv1.Accounts.UseHold:input_type -> accountsv1.UseHoldRequest
+	5,  // 16: accountsv1.Accounts.ReleaseHold:input_type -> accountsv1.ReleaseHoldRequest
+	7,  // 17: accountsv1.Accounts.GetAccount:input_type -> accountsv1.GetAccountRequest
+	10, // 18: accountsv1.Accounts.GetTradingGroupPolicy:input_type -> accountsv1.GetTradingGroupPolicyRequest
+	13, // 19: accountsv1.Accounts.Deposit:input_type -> accountsv1.DepositRequest
+	15, // 20: accountsv1.Accounts.Withdraw:input_type -> accountsv1.WithdrawRequest
+	17, // 21: accountsv1.Accounts.GetAccountByLogin:input_type -> accountsv1.GetAccountByLoginRequest
+	2,  // 22: accountsv1.Accounts.CreateHold:output_type -> accountsv1.CreateHoldResponse
+	4,  // 23: accountsv1.Accounts.UseHold:output_type -> accountsv1.UseHoldResponse
+	6,  // 24: accountsv1.Accounts.ReleaseHold:output_type -> accountsv1.ReleaseHoldResponse
+	9,  // 25: accountsv1.Accounts.GetAccount:output_type -> accountsv1.GetAccountResponse
+	12, // 26: accountsv1.Accounts.GetTradingGroupPolicy:output_type -> accountsv1.GetTradingGroupPolicyResponse
+	14, // 27: accountsv1.Accounts.Deposit:output_type -> accountsv1.DepositResponse
+	16, // 28: accountsv1.Accounts.Withdraw:output_type -> accountsv1.WithdrawResponse
+	19, // 29: accountsv1.Accounts.GetAccountByLogin:output_type -> accountsv1.GetAccountByLoginResponse
+	22, // [22:30] is the sub-list for method output_type
+	14, // [14:22] is the sub-list for method input_type
+	14, // [14:14] is the sub-list for extension type_name
+	14, // [14:14] is the sub-list for extension extendee
+	0,  // [0:14] is the sub-list for field type_name
 }
 
 func init() { file_accounts_v1_accounts_proto_init() }
@@ -1625,7 +1836,7 @@ func file_accounts_v1_accounts_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_accounts_v1_accounts_proto_rawDesc), len(file_accounts_v1_accounts_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   22,
+			NumMessages:   25,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

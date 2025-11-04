@@ -26,6 +26,9 @@ service Accounts {
   
   // Withdraw removes funds from an account balance
   rpc Withdraw(WithdrawRequest) returns (WithdrawResponse);
+  
+  // GetAccountByLogin retrieves account information by login
+  rpc GetAccountByLogin(GetAccountByLoginRequest) returns (GetAccountByLoginResponse);
 }
 
 // Money represents a monetary amount with currency
@@ -196,4 +199,26 @@ message WithdrawResponse {
   double amount_withdrawn = 3;     // Amount that was withdrawn
   string transaction_id = 4;       // Ledger entry ID
   string created_at = 5;           // ISO 8601 timestamp
+}
+
+// GetAccountByLoginRequest requests account information by login
+message GetAccountByLoginRequest {
+  string login = 1;                // Trading account login
+}
+
+// AccountByLoginInfo contains basic account information retrieved by login
+message AccountByLoginInfo {
+  int64 id = 1;                    // Account ID
+  string login = 2;                // Trading account login
+  int64 trading_group_id = 3;      // Trading group ID
+  string state = 4;                // Account state (e.g., "active", "inactive")
+  string balance = 5;              // Account balance
+  string credit = 6;               // Account credit
+  int32 leverage = 7;              // Account leverage (e.g., 100 for 1:100)
+  string currency = 8;             // Account currency: "USD", "EUR"
+}
+
+// GetAccountByLoginResponse returns account information
+message GetAccountByLoginResponse {
+  AccountByLoginInfo account = 1;  // Account information
 }

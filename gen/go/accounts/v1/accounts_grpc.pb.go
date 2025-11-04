@@ -26,6 +26,7 @@ const (
 	Accounts_GetTradingGroupPolicy_FullMethodName = "/accountsv1.Accounts/GetTradingGroupPolicy"
 	Accounts_Deposit_FullMethodName               = "/accountsv1.Accounts/Deposit"
 	Accounts_Withdraw_FullMethodName              = "/accountsv1.Accounts/Withdraw"
+	Accounts_GetAccountByLogin_FullMethodName     = "/accountsv1.Accounts/GetAccountByLogin"
 )
 
 // AccountsClient is the client API for Accounts service.
@@ -48,6 +49,8 @@ type AccountsClient interface {
 	Deposit(ctx context.Context, in *DepositRequest, opts ...grpc.CallOption) (*DepositResponse, error)
 	// Withdraw removes funds from an account balance
 	Withdraw(ctx context.Context, in *WithdrawRequest, opts ...grpc.CallOption) (*WithdrawResponse, error)
+	// GetAccountByLogin retrieves account information by login
+	GetAccountByLogin(ctx context.Context, in *GetAccountByLoginRequest, opts ...grpc.CallOption) (*GetAccountByLoginResponse, error)
 }
 
 type accountsClient struct {
@@ -128,6 +131,16 @@ func (c *accountsClient) Withdraw(ctx context.Context, in *WithdrawRequest, opts
 	return out, nil
 }
 
+func (c *accountsClient) GetAccountByLogin(ctx context.Context, in *GetAccountByLoginRequest, opts ...grpc.CallOption) (*GetAccountByLoginResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetAccountByLoginResponse)
+	err := c.cc.Invoke(ctx, Accounts_GetAccountByLogin_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AccountsServer is the server API for Accounts service.
 // All implementations must embed UnimplementedAccountsServer
 // for forward compatibility.
@@ -148,6 +161,8 @@ type AccountsServer interface {
 	Deposit(context.Context, *DepositRequest) (*DepositResponse, error)
 	// Withdraw removes funds from an account balance
 	Withdraw(context.Context, *WithdrawRequest) (*WithdrawResponse, error)
+	// GetAccountByLogin retrieves account information by login
+	GetAccountByLogin(context.Context, *GetAccountByLoginRequest) (*GetAccountByLoginResponse, error)
 	mustEmbedUnimplementedAccountsServer()
 }
 
@@ -178,6 +193,9 @@ func (UnimplementedAccountsServer) Deposit(context.Context, *DepositRequest) (*D
 }
 func (UnimplementedAccountsServer) Withdraw(context.Context, *WithdrawRequest) (*WithdrawResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Withdraw not implemented")
+}
+func (UnimplementedAccountsServer) GetAccountByLogin(context.Context, *GetAccountByLoginRequest) (*GetAccountByLoginResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAccountByLogin not implemented")
 }
 func (UnimplementedAccountsServer) mustEmbedUnimplementedAccountsServer() {}
 func (UnimplementedAccountsServer) testEmbeddedByValue()                  {}
@@ -326,6 +344,24 @@ func _Accounts_Withdraw_Handler(srv interface{}, ctx context.Context, dec func(i
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Accounts_GetAccountByLogin_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAccountByLoginRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AccountsServer).GetAccountByLogin(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: Accounts_GetAccountByLogin_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccountsServer).GetAccountByLogin(ctx, req.(*GetAccountByLoginRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Accounts_ServiceDesc is the grpc.ServiceDesc for Accounts service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -360,6 +396,10 @@ var Accounts_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "Withdraw",
 			Handler:    _Accounts_Withdraw_Handler,
+		},
+		{
+			MethodName: "GetAccountByLogin",
+			Handler:    _Accounts_GetAccountByLogin_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
