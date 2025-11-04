@@ -101,6 +101,7 @@ message AccountInfo {
   string free_margin = 7;          // Available free margin
   string margin_level = 8;         // Margin level percentage (equity/used_margin * 100)
   bool is_active = 9;              // Whether the account is active
+  string login = 10;               // Trading account login
 }
 
 // GetAccountResponse returns account information
