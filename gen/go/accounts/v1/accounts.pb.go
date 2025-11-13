@@ -570,6 +570,7 @@ type AccountInfo struct {
 	MarginLevel    string                 `protobuf:"bytes,8,opt,name=margin_level,json=marginLevel,proto3" json:"margin_level,omitempty"`             // Margin level percentage (equity/used_margin * 100)
 	IsActive       bool                   `protobuf:"varint,9,opt,name=is_active,json=isActive,proto3" json:"is_active,omitempty"`                     // Whether the account is active
 	Login          string                 `protobuf:"bytes,10,opt,name=login,proto3" json:"login,omitempty"`                                           // Trading account login
+	Leverage       int32                  `protobuf:"varint,11,opt,name=leverage,proto3" json:"leverage,omitempty"`                                    // Account leverage (e.g., 100 for 1:100)
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
@@ -672,6 +673,13 @@ func (x *AccountInfo) GetLogin() string {
 		return x.Login
 	}
 	return ""
+}
+
+func (x *AccountInfo) GetLeverage() int32 {
+	if x != nil {
+		return x.Leverage
+	}
+	return 0
 }
 
 // GetAccountResponse returns account information
@@ -1629,7 +1637,7 @@ const file_accounts_v1_accounts_proto_rawDesc = "" +
 	"releasedAt\"2\n" +
 	"\x11GetAccountRequest\x12\x1d\n" +
 	"\n" +
-	"account_id\x18\x01 \x01(\x03R\taccountId\"\xbc\x02\n" +
+	"account_id\x18\x01 \x01(\x03R\taccountId\"\xd8\x02\n" +
 	"\vAccountInfo\x12\x1d\n" +
 	"\n" +
 	"account_id\x18\x01 \x01(\x03R\taccountId\x12(\n" +
@@ -1644,7 +1652,8 @@ const file_accounts_v1_accounts_proto_rawDesc = "" +
 	"\fmargin_level\x18\b \x01(\tR\vmarginLevel\x12\x1b\n" +
 	"\tis_active\x18\t \x01(\bR\bisActive\x12\x14\n" +
 	"\x05login\x18\n" +
-	" \x01(\tR\x05login\"G\n" +
+	" \x01(\tR\x05login\x12\x1a\n" +
+	"\bleverage\x18\v \x01(\x05R\bleverage\"G\n" +
 	"\x12GetAccountResponse\x121\n" +
 	"\aaccount\x18\x01 \x01(\v2\x17.accountsv1.AccountInfoR\aaccount\"H\n" +
 	"\x1cGetTradingGroupPolicyRequest\x12(\n" +

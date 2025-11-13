@@ -105,6 +105,7 @@ message AccountInfo {
   string margin_level = 8;         // Margin level percentage (equity/used_margin * 100)
   bool is_active = 9;              // Whether the account is active
   string login = 10;               // Trading account login
+  int32 leverage = 11;             // Account leverage (e.g., 100 for 1:100)
 }
 
 // GetAccountResponse returns account information
