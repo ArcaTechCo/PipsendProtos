@@ -29,6 +29,9 @@ service Accounts {
   
   // GetAccountByLogin retrieves account information by login
   rpc GetAccountByLogin(GetAccountByLoginRequest) returns (GetAccountByLoginResponse);
+  
+  // GetRights retrieves account rights/permissions as bitmask
+  rpc GetRights(GetRightsRequest) returns (GetRightsResponse);
 }
 
 // Money represents a monetary amount with currency
@@ -222,4 +225,15 @@ message AccountByLoginInfo {
 // GetAccountByLoginResponse returns account information
 message GetAccountByLoginResponse {
   AccountByLoginInfo account = 1;  // Account information
+}
+
+// GetRightsRequest requests account rights/permissions
+message GetRightsRequest {
+  int64 account_id = 1;            // Account ID to retrieve rights for
+}
+
+// GetRightsResponse returns account rights as bitmask
+message GetRightsResponse {
+  int64 account_id = 1;            // Account ID
+  uint64 rights = 2;               // Rights bitmask (1=ENABLED, 2=LOGIN, 4=TRADE, 8=EA, etc.)
 }
