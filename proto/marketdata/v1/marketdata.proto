@@ -23,6 +23,9 @@ service MarketData {
   
   // ListSymbols returns a list of symbols with optional active filter
   rpc ListSymbols(ListSymbolsRequest) returns (ListSymbolsResponse);
+  
+  // GetTradingSessions returns trading sessions for a symbol
+  rpc GetTradingSessions(GetTradingSessionsRequest) returns (GetTradingSessionsResponse);
 }
 
 // GetTopOfBookRequest requests top of book data for a symbol
@@ -112,4 +115,26 @@ message GetSymbolResponse {
 // ListSymbolsResponse returns a list of symbols
 message ListSymbolsResponse {
   repeated SymbolInfo symbols = 1;
+}
+
+// GetTradingSessionsRequest requests trading sessions for a symbol
+message GetTradingSessionsRequest {
+  int64 symbol_id = 1; // Symbol ID
+}
+
+// TradingSession represents a single trading session window
+message TradingSession {
+  int32 day_of_week = 1;     // 0=Sunday, 1=Monday, ..., 6=Saturday
+  string open_time = 2;      // "09:30:00" (HH:MM:SS format)
+  string close_time = 3;     // "16:00:00" (HH:MM:SS format)
+  int32 session_number = 4;  // 1, 2, 3... (for multiple sessions per day)
+}
+
+// GetTradingSessionsResponse returns trading sessions for a symbol
+message GetTradingSessionsResponse {
+  bool is_24_7 = 1;                      // true if market operates 24/7
+  string timezone = 2;                   // "America/New_York", "UTC", etc.
+  string symbol_code = 3;                // "AAPL", "EURUSD", etc.
+  repeated TradingSession sessions = 4;  // List of trading sessions
+  string source = 5;                     // "SYMBOL_ONLY", "PROVIDER_ONLY", "INTERSECTION", "24_7"
 }

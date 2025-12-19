@@ -19,12 +19,13 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	MarketData_GetTopOfBook_FullMethodName    = "/marketdata.v1.MarketData/GetTopOfBook"
-	MarketData_GetMarkPrice_FullMethodName    = "/marketdata.v1.MarketData/GetMarkPrice"
-	MarketData_Convert_FullMethodName         = "/marketdata.v1.MarketData/Convert"
-	MarketData_GetSymbol_FullMethodName       = "/marketdata.v1.MarketData/GetSymbol"
-	MarketData_GetSymbolByCode_FullMethodName = "/marketdata.v1.MarketData/GetSymbolByCode"
-	MarketData_ListSymbols_FullMethodName     = "/marketdata.v1.MarketData/ListSymbols"
+	MarketData_GetTopOfBook_FullMethodName       = "/marketdata.v1.MarketData/GetTopOfBook"
+	MarketData_GetMarkPrice_FullMethodName       = "/marketdata.v1.MarketData/GetMarkPrice"
+	MarketData_Convert_FullMethodName            = "/marketdata.v1.MarketData/Convert"
+	MarketData_GetSymbol_FullMethodName          = "/marketdata.v1.MarketData/GetSymbol"
+	MarketData_GetSymbolByCode_FullMethodName    = "/marketdata.v1.MarketData/GetSymbolByCode"
+	MarketData_ListSymbols_FullMethodName        = "/marketdata.v1.MarketData/ListSymbols"
+	MarketData_GetTradingSessions_FullMethodName = "/marketdata.v1.MarketData/GetTradingSessions"
 )
 
 // MarketDataClient is the client API for MarketData service.
@@ -45,6 +46,8 @@ type MarketDataClient interface {
 	GetSymbolByCode(ctx context.Context, in *GetSymbolByCodeRequest, opts ...grpc.CallOption) (*GetSymbolResponse, error)
 	// ListSymbols returns a list of symbols with optional active filter
 	ListSymbols(ctx context.Context, in *ListSymbolsRequest, opts ...grpc.CallOption) (*ListSymbolsResponse, error)
+	// GetTradingSessions returns trading sessions for a symbol
+	GetTradingSessions(ctx context.Context, in *GetTradingSessionsRequest, opts ...grpc.CallOption) (*GetTradingSessionsResponse, error)
 }
 
 type marketDataClient struct {
@@ -115,6 +118,16 @@ func (c *marketDataClient) ListSymbols(ctx context.Context, in *ListSymbolsReque
 	return out, nil
 }
 
+func (c *marketDataClient) GetTradingSessions(ctx context.Context, in *GetTradingSessionsRequest, opts ...grpc.CallOption) (*GetTradingSessionsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetTradingSessionsResponse)
+	err := c.cc.Invoke(ctx, MarketData_GetTradingSessions_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MarketDataServer is the server API for MarketData service.
 // All implementations must embed UnimplementedMarketDataServer
 // for forward compatibility.
@@ -133,6 +146,8 @@ type MarketDataServer interface {
 	GetSymbolByCode(context.Context, *GetSymbolByCodeRequest) (*GetSymbolResponse, error)
 	// ListSymbols returns a list of symbols with optional active filter
 	ListSymbols(context.Context, *ListSymbolsRequest) (*ListSymbolsResponse, error)
+	// GetTradingSessions returns trading sessions for a symbol
+	GetTradingSessions(context.Context, *GetTradingSessionsRequest) (*GetTradingSessionsResponse, error)
 	mustEmbedUnimplementedMarketDataServer()
 }
 
@@ -160,6 +175,9 @@ func (UnimplementedMarketDataServer) GetSymbolByCode(context.Context, *GetSymbol
 }
 func (UnimplementedMarketDataServer) ListSymbols(context.Context, *ListSymbolsRequest) (*ListSymbolsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListSymbols not implemented")
+}
+func (UnimplementedMarketDataServer) GetTradingSessions(context.Context, *GetTradingSessionsRequest) (*GetTradingSessionsResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetTradingSessions not implemented")
 }
 func (UnimplementedMarketDataServer) mustEmbedUnimplementedMarketDataServer() {}
 func (UnimplementedMarketDataServer) testEmbeddedByValue()                    {}
@@ -290,6 +308,24 @@ func _MarketData_ListSymbols_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
+func _MarketData_GetTradingSessions_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetTradingSessionsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MarketDataServer).GetTradingSessions(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MarketData_GetTradingSessions_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MarketDataServer).GetTradingSessions(ctx, req.(*GetTradingSessionsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // MarketData_ServiceDesc is the grpc.ServiceDesc for MarketData service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -320,6 +356,10 @@ var MarketData_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "ListSymbols",
 			Handler:    _MarketData_ListSymbols_Handler,
+		},
+		{
+			MethodName: "GetTradingSessions",
+			Handler:    _MarketData_GetTradingSessions_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
