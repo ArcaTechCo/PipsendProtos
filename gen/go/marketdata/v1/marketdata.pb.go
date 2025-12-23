@@ -984,6 +984,505 @@ func (x *GetTradingSessionsResponse) GetSource() string {
 	return ""
 }
 
+// GetHistoricalCandlesRequest requests historical OHLC candles
+type GetHistoricalCandlesRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	SymbolId      int64                  `protobuf:"varint,1,opt,name=symbol_id,json=symbolId,proto3" json:"symbol_id,omitempty"` // Symbol ID from database
+	Timeframe     string                 `protobuf:"bytes,2,opt,name=timeframe,proto3" json:"timeframe,omitempty"`                // Timeframe: "M1", "M5", "M15", "M30", "H1", "H4", "D1", "W1", "MN"
+	FromTime      int64                  `protobuf:"varint,3,opt,name=from_time,json=fromTime,proto3" json:"from_time,omitempty"` // Start timestamp (Unix seconds)
+	ToTime        int64                  `protobuf:"varint,4,opt,name=to_time,json=toTime,proto3" json:"to_time,omitempty"`       // End timestamp (Unix seconds)
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetHistoricalCandlesRequest) Reset() {
+	*x = GetHistoricalCandlesRequest{}
+	mi := &file_marketdata_v1_marketdata_proto_msgTypes[15]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetHistoricalCandlesRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetHistoricalCandlesRequest) ProtoMessage() {}
+
+func (x *GetHistoricalCandlesRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_marketdata_v1_marketdata_proto_msgTypes[15]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetHistoricalCandlesRequest.ProtoReflect.Descriptor instead.
+func (*GetHistoricalCandlesRequest) Descriptor() ([]byte, []int) {
+	return file_marketdata_v1_marketdata_proto_rawDescGZIP(), []int{15}
+}
+
+func (x *GetHistoricalCandlesRequest) GetSymbolId() int64 {
+	if x != nil {
+		return x.SymbolId
+	}
+	return 0
+}
+
+func (x *GetHistoricalCandlesRequest) GetTimeframe() string {
+	if x != nil {
+		return x.Timeframe
+	}
+	return ""
+}
+
+func (x *GetHistoricalCandlesRequest) GetFromTime() int64 {
+	if x != nil {
+		return x.FromTime
+	}
+	return 0
+}
+
+func (x *GetHistoricalCandlesRequest) GetToTime() int64 {
+	if x != nil {
+		return x.ToTime
+	}
+	return 0
+}
+
+// GetHistoricalCandlesResponse streams individual candles
+type GetHistoricalCandlesResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Time          int64                  `protobuf:"varint,1,opt,name=time,proto3" json:"time,omitempty"`     // Candle timestamp (Unix seconds)
+	Open          float64                `protobuf:"fixed64,2,opt,name=open,proto3" json:"open,omitempty"`    // Open price
+	High          float64                `protobuf:"fixed64,3,opt,name=high,proto3" json:"high,omitempty"`    // High price
+	Low           float64                `protobuf:"fixed64,4,opt,name=low,proto3" json:"low,omitempty"`      // Low price
+	Close         float64                `protobuf:"fixed64,5,opt,name=close,proto3" json:"close,omitempty"`  // Close price
+	Volume        int64                  `protobuf:"varint,6,opt,name=volume,proto3" json:"volume,omitempty"` // Volume (0 if not available)
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetHistoricalCandlesResponse) Reset() {
+	*x = GetHistoricalCandlesResponse{}
+	mi := &file_marketdata_v1_marketdata_proto_msgTypes[16]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetHistoricalCandlesResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetHistoricalCandlesResponse) ProtoMessage() {}
+
+func (x *GetHistoricalCandlesResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_marketdata_v1_marketdata_proto_msgTypes[16]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetHistoricalCandlesResponse.ProtoReflect.Descriptor instead.
+func (*GetHistoricalCandlesResponse) Descriptor() ([]byte, []int) {
+	return file_marketdata_v1_marketdata_proto_rawDescGZIP(), []int{16}
+}
+
+func (x *GetHistoricalCandlesResponse) GetTime() int64 {
+	if x != nil {
+		return x.Time
+	}
+	return 0
+}
+
+func (x *GetHistoricalCandlesResponse) GetOpen() float64 {
+	if x != nil {
+		return x.Open
+	}
+	return 0
+}
+
+func (x *GetHistoricalCandlesResponse) GetHigh() float64 {
+	if x != nil {
+		return x.High
+	}
+	return 0
+}
+
+func (x *GetHistoricalCandlesResponse) GetLow() float64 {
+	if x != nil {
+		return x.Low
+	}
+	return 0
+}
+
+func (x *GetHistoricalCandlesResponse) GetClose() float64 {
+	if x != nil {
+		return x.Close
+	}
+	return 0
+}
+
+func (x *GetHistoricalCandlesResponse) GetVolume() int64 {
+	if x != nil {
+		return x.Volume
+	}
+	return 0
+}
+
+// GetHistoricalTicksRequest requests historical tick data
+type GetHistoricalTicksRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	SymbolId      int64                  `protobuf:"varint,1,opt,name=symbol_id,json=symbolId,proto3" json:"symbol_id,omitempty"` // Symbol ID from database
+	FromTime      int64                  `protobuf:"varint,2,opt,name=from_time,json=fromTime,proto3" json:"from_time,omitempty"` // Start timestamp (Unix seconds)
+	ToTime        int64                  `protobuf:"varint,3,opt,name=to_time,json=toTime,proto3" json:"to_time,omitempty"`       // End timestamp (Unix seconds)
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetHistoricalTicksRequest) Reset() {
+	*x = GetHistoricalTicksRequest{}
+	mi := &file_marketdata_v1_marketdata_proto_msgTypes[17]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetHistoricalTicksRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetHistoricalTicksRequest) ProtoMessage() {}
+
+func (x *GetHistoricalTicksRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_marketdata_v1_marketdata_proto_msgTypes[17]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetHistoricalTicksRequest.ProtoReflect.Descriptor instead.
+func (*GetHistoricalTicksRequest) Descriptor() ([]byte, []int) {
+	return file_marketdata_v1_marketdata_proto_rawDescGZIP(), []int{17}
+}
+
+func (x *GetHistoricalTicksRequest) GetSymbolId() int64 {
+	if x != nil {
+		return x.SymbolId
+	}
+	return 0
+}
+
+func (x *GetHistoricalTicksRequest) GetFromTime() int64 {
+	if x != nil {
+		return x.FromTime
+	}
+	return 0
+}
+
+func (x *GetHistoricalTicksRequest) GetToTime() int64 {
+	if x != nil {
+		return x.ToTime
+	}
+	return 0
+}
+
+// GetHistoricalTicksResponse streams individual ticks
+type GetHistoricalTicksResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Time          int64                  `protobuf:"varint,1,opt,name=time,proto3" json:"time,omitempty"` // Tick timestamp (Unix seconds)
+	Bid           float64                `protobuf:"fixed64,2,opt,name=bid,proto3" json:"bid,omitempty"`  // Bid price
+	Ask           float64                `protobuf:"fixed64,3,opt,name=ask,proto3" json:"ask,omitempty"`  // Ask price
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetHistoricalTicksResponse) Reset() {
+	*x = GetHistoricalTicksResponse{}
+	mi := &file_marketdata_v1_marketdata_proto_msgTypes[18]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetHistoricalTicksResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetHistoricalTicksResponse) ProtoMessage() {}
+
+func (x *GetHistoricalTicksResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_marketdata_v1_marketdata_proto_msgTypes[18]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetHistoricalTicksResponse.ProtoReflect.Descriptor instead.
+func (*GetHistoricalTicksResponse) Descriptor() ([]byte, []int) {
+	return file_marketdata_v1_marketdata_proto_rawDescGZIP(), []int{18}
+}
+
+func (x *GetHistoricalTicksResponse) GetTime() int64 {
+	if x != nil {
+		return x.Time
+	}
+	return 0
+}
+
+func (x *GetHistoricalTicksResponse) GetBid() float64 {
+	if x != nil {
+		return x.Bid
+	}
+	return 0
+}
+
+func (x *GetHistoricalTicksResponse) GetAsk() float64 {
+	if x != nil {
+		return x.Ask
+	}
+	return 0
+}
+
+// GetSymbolInfoRequest requests detailed symbol information
+type GetSymbolInfoRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	SymbolId      int64                  `protobuf:"varint,1,opt,name=symbol_id,json=symbolId,proto3" json:"symbol_id,omitempty"` // Symbol ID from database
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetSymbolInfoRequest) Reset() {
+	*x = GetSymbolInfoRequest{}
+	mi := &file_marketdata_v1_marketdata_proto_msgTypes[19]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetSymbolInfoRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetSymbolInfoRequest) ProtoMessage() {}
+
+func (x *GetSymbolInfoRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_marketdata_v1_marketdata_proto_msgTypes[19]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetSymbolInfoRequest.ProtoReflect.Descriptor instead.
+func (*GetSymbolInfoRequest) Descriptor() ([]byte, []int) {
+	return file_marketdata_v1_marketdata_proto_rawDescGZIP(), []int{19}
+}
+
+func (x *GetSymbolInfoRequest) GetSymbolId() int64 {
+	if x != nil {
+		return x.SymbolId
+	}
+	return 0
+}
+
+// SymbolInfoDetailed contains complete trading symbol information
+type SymbolInfoDetailed struct {
+	state          protoimpl.MessageState `protogen:"open.v1"`
+	SymbolId       int64                  `protobuf:"varint,1,opt,name=symbol_id,json=symbolId,proto3" json:"symbol_id,omitempty"`                     // Symbol ID
+	SymbolName     string                 `protobuf:"bytes,2,opt,name=symbol_name,json=symbolName,proto3" json:"symbol_name,omitempty"`                // Symbol name/code (e.g., "EURUSD")
+	ContractSize   float64                `protobuf:"fixed64,3,opt,name=contract_size,json=contractSize,proto3" json:"contract_size,omitempty"`        // Contract size (e.g., 100000 for forex)
+	Digits         int32                  `protobuf:"varint,4,opt,name=digits,proto3" json:"digits,omitempty"`                                         // Number of decimal places (e.g., 5 for EURUSD)
+	Point          float64                `protobuf:"fixed64,5,opt,name=point,proto3" json:"point,omitempty"`                                          // Point value (e.g., 0.00001)
+	TickSize       float64                `protobuf:"fixed64,6,opt,name=tick_size,json=tickSize,proto3" json:"tick_size,omitempty"`                    // Minimum tick size
+	TickValue      float64                `protobuf:"fixed64,7,opt,name=tick_value,json=tickValue,proto3" json:"tick_value,omitempty"`                 // Value of one tick
+	Spread         float64                `protobuf:"fixed64,8,opt,name=spread,proto3" json:"spread,omitempty"`                                        // Current spread
+	MinTradeSize   float64                `protobuf:"fixed64,9,opt,name=min_trade_size,json=minTradeSize,proto3" json:"min_trade_size,omitempty"`      // Minimum trade size
+	MaxTradeSize   float64                `protobuf:"fixed64,10,opt,name=max_trade_size,json=maxTradeSize,proto3" json:"max_trade_size,omitempty"`     // Maximum trade size
+	RequiredMargin float64                `protobuf:"fixed64,11,opt,name=required_margin,json=requiredMargin,proto3" json:"required_margin,omitempty"` // Required margin percentage
+	AssetType      string                 `protobuf:"bytes,12,opt,name=asset_type,json=assetType,proto3" json:"asset_type,omitempty"`                  // Asset type: "forex", "crypto", "stock", etc.
+	unknownFields  protoimpl.UnknownFields
+	sizeCache      protoimpl.SizeCache
+}
+
+func (x *SymbolInfoDetailed) Reset() {
+	*x = SymbolInfoDetailed{}
+	mi := &file_marketdata_v1_marketdata_proto_msgTypes[20]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *SymbolInfoDetailed) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*SymbolInfoDetailed) ProtoMessage() {}
+
+func (x *SymbolInfoDetailed) ProtoReflect() protoreflect.Message {
+	mi := &file_marketdata_v1_marketdata_proto_msgTypes[20]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use SymbolInfoDetailed.ProtoReflect.Descriptor instead.
+func (*SymbolInfoDetailed) Descriptor() ([]byte, []int) {
+	return file_marketdata_v1_marketdata_proto_rawDescGZIP(), []int{20}
+}
+
+func (x *SymbolInfoDetailed) GetSymbolId() int64 {
+	if x != nil {
+		return x.SymbolId
+	}
+	return 0
+}
+
+func (x *SymbolInfoDetailed) GetSymbolName() string {
+	if x != nil {
+		return x.SymbolName
+	}
+	return ""
+}
+
+func (x *SymbolInfoDetailed) GetContractSize() float64 {
+	if x != nil {
+		return x.ContractSize
+	}
+	return 0
+}
+
+func (x *SymbolInfoDetailed) GetDigits() int32 {
+	if x != nil {
+		return x.Digits
+	}
+	return 0
+}
+
+func (x *SymbolInfoDetailed) GetPoint() float64 {
+	if x != nil {
+		return x.Point
+	}
+	return 0
+}
+
+func (x *SymbolInfoDetailed) GetTickSize() float64 {
+	if x != nil {
+		return x.TickSize
+	}
+	return 0
+}
+
+func (x *SymbolInfoDetailed) GetTickValue() float64 {
+	if x != nil {
+		return x.TickValue
+	}
+	return 0
+}
+
+func (x *SymbolInfoDetailed) GetSpread() float64 {
+	if x != nil {
+		return x.Spread
+	}
+	return 0
+}
+
+func (x *SymbolInfoDetailed) GetMinTradeSize() float64 {
+	if x != nil {
+		return x.MinTradeSize
+	}
+	return 0
+}
+
+func (x *SymbolInfoDetailed) GetMaxTradeSize() float64 {
+	if x != nil {
+		return x.MaxTradeSize
+	}
+	return 0
+}
+
+func (x *SymbolInfoDetailed) GetRequiredMargin() float64 {
+	if x != nil {
+		return x.RequiredMargin
+	}
+	return 0
+}
+
+func (x *SymbolInfoDetailed) GetAssetType() string {
+	if x != nil {
+		return x.AssetType
+	}
+	return ""
+}
+
+// GetSymbolInfoResponse returns detailed symbol information
+type GetSymbolInfoResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Symbol        *SymbolInfoDetailed    `protobuf:"bytes,1,opt,name=symbol,proto3" json:"symbol,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetSymbolInfoResponse) Reset() {
+	*x = GetSymbolInfoResponse{}
+	mi := &file_marketdata_v1_marketdata_proto_msgTypes[21]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetSymbolInfoResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetSymbolInfoResponse) ProtoMessage() {}
+
+func (x *GetSymbolInfoResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_marketdata_v1_marketdata_proto_msgTypes[21]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetSymbolInfoResponse.ProtoReflect.Descriptor instead.
+func (*GetSymbolInfoResponse) Descriptor() ([]byte, []int) {
+	return file_marketdata_v1_marketdata_proto_rawDescGZIP(), []int{21}
+}
+
+func (x *GetSymbolInfoResponse) GetSymbol() *SymbolInfoDetailed {
+	if x != nil {
+		return x.Symbol
+	}
+	return nil
+}
+
 var File_marketdata_v1_marketdata_proto protoreflect.FileDescriptor
 
 const file_marketdata_v1_marketdata_proto_rawDesc = "" +
@@ -1065,7 +1564,48 @@ const file_marketdata_v1_marketdata_proto_rawDesc = "" +
 	"\vsymbol_code\x18\x03 \x01(\tR\n" +
 	"symbolCode\x129\n" +
 	"\bsessions\x18\x04 \x03(\v2\x1d.marketdata.v1.TradingSessionR\bsessions\x12\x16\n" +
-	"\x06source\x18\x05 \x01(\tR\x06source2\xf5\x04\n" +
+	"\x06source\x18\x05 \x01(\tR\x06source\"\x8e\x01\n" +
+	"\x1bGetHistoricalCandlesRequest\x12\x1b\n" +
+	"\tsymbol_id\x18\x01 \x01(\x03R\bsymbolId\x12\x1c\n" +
+	"\ttimeframe\x18\x02 \x01(\tR\ttimeframe\x12\x1b\n" +
+	"\tfrom_time\x18\x03 \x01(\x03R\bfromTime\x12\x17\n" +
+	"\ato_time\x18\x04 \x01(\x03R\x06toTime\"\x9a\x01\n" +
+	"\x1cGetHistoricalCandlesResponse\x12\x12\n" +
+	"\x04time\x18\x01 \x01(\x03R\x04time\x12\x12\n" +
+	"\x04open\x18\x02 \x01(\x01R\x04open\x12\x12\n" +
+	"\x04high\x18\x03 \x01(\x01R\x04high\x12\x10\n" +
+	"\x03low\x18\x04 \x01(\x01R\x03low\x12\x14\n" +
+	"\x05close\x18\x05 \x01(\x01R\x05close\x12\x16\n" +
+	"\x06volume\x18\x06 \x01(\x03R\x06volume\"n\n" +
+	"\x19GetHistoricalTicksRequest\x12\x1b\n" +
+	"\tsymbol_id\x18\x01 \x01(\x03R\bsymbolId\x12\x1b\n" +
+	"\tfrom_time\x18\x02 \x01(\x03R\bfromTime\x12\x17\n" +
+	"\ato_time\x18\x03 \x01(\x03R\x06toTime\"T\n" +
+	"\x1aGetHistoricalTicksResponse\x12\x12\n" +
+	"\x04time\x18\x01 \x01(\x03R\x04time\x12\x10\n" +
+	"\x03bid\x18\x02 \x01(\x01R\x03bid\x12\x10\n" +
+	"\x03ask\x18\x03 \x01(\x01R\x03ask\"3\n" +
+	"\x14GetSymbolInfoRequest\x12\x1b\n" +
+	"\tsymbol_id\x18\x01 \x01(\x03R\bsymbolId\"\x8d\x03\n" +
+	"\x12SymbolInfoDetailed\x12\x1b\n" +
+	"\tsymbol_id\x18\x01 \x01(\x03R\bsymbolId\x12\x1f\n" +
+	"\vsymbol_name\x18\x02 \x01(\tR\n" +
+	"symbolName\x12#\n" +
+	"\rcontract_size\x18\x03 \x01(\x01R\fcontractSize\x12\x16\n" +
+	"\x06digits\x18\x04 \x01(\x05R\x06digits\x12\x14\n" +
+	"\x05point\x18\x05 \x01(\x01R\x05point\x12\x1b\n" +
+	"\ttick_size\x18\x06 \x01(\x01R\btickSize\x12\x1d\n" +
+	"\n" +
+	"tick_value\x18\a \x01(\x01R\ttickValue\x12\x16\n" +
+	"\x06spread\x18\b \x01(\x01R\x06spread\x12$\n" +
+	"\x0emin_trade_size\x18\t \x01(\x01R\fminTradeSize\x12$\n" +
+	"\x0emax_trade_size\x18\n" +
+	" \x01(\x01R\fmaxTradeSize\x12'\n" +
+	"\x0frequired_margin\x18\v \x01(\x01R\x0erequiredMargin\x12\x1d\n" +
+	"\n" +
+	"asset_type\x18\f \x01(\tR\tassetType\"R\n" +
+	"\x15GetSymbolInfoResponse\x129\n" +
+	"\x06symbol\x18\x01 \x01(\v2!.marketdata.v1.SymbolInfoDetailedR\x06symbol2\xb1\a\n" +
 	"\n" +
 	"MarketData\x12W\n" +
 	"\fGetTopOfBook\x12\".marketdata.v1.GetTopOfBookRequest\x1a#.marketdata.v1.GetTopOfBookResponse\x12W\n" +
@@ -1074,7 +1614,10 @@ const file_marketdata_v1_marketdata_proto_rawDesc = "" +
 	"\tGetSymbol\x12\x1f.marketdata.v1.GetSymbolRequest\x1a .marketdata.v1.GetSymbolResponse\x12Z\n" +
 	"\x0fGetSymbolByCode\x12%.marketdata.v1.GetSymbolByCodeRequest\x1a .marketdata.v1.GetSymbolResponse\x12T\n" +
 	"\vListSymbols\x12!.marketdata.v1.ListSymbolsRequest\x1a\".marketdata.v1.ListSymbolsResponse\x12i\n" +
-	"\x12GetTradingSessions\x12(.marketdata.v1.GetTradingSessionsRequest\x1a).marketdata.v1.GetTradingSessionsResponseBGZEgithub.com/ArcaTechCo/PipsendProtos/gen/go/marketdata/v1;marketdatav1b\x06proto3"
+	"\x12GetTradingSessions\x12(.marketdata.v1.GetTradingSessionsRequest\x1a).marketdata.v1.GetTradingSessionsResponse\x12q\n" +
+	"\x14GetHistoricalCandles\x12*.marketdata.v1.GetHistoricalCandlesRequest\x1a+.marketdata.v1.GetHistoricalCandlesResponse0\x01\x12k\n" +
+	"\x12GetHistoricalTicks\x12(.marketdata.v1.GetHistoricalTicksRequest\x1a).marketdata.v1.GetHistoricalTicksResponse0\x01\x12Z\n" +
+	"\rGetSymbolInfo\x12#.marketdata.v1.GetSymbolInfoRequest\x1a$.marketdata.v1.GetSymbolInfoResponseBGZEgithub.com/ArcaTechCo/PipsendProtos/gen/go/marketdata/v1;marketdatav1b\x06proto3"
 
 var (
 	file_marketdata_v1_marketdata_proto_rawDescOnce sync.Once
@@ -1088,47 +1631,61 @@ func file_marketdata_v1_marketdata_proto_rawDescGZIP() []byte {
 	return file_marketdata_v1_marketdata_proto_rawDescData
 }
 
-var file_marketdata_v1_marketdata_proto_msgTypes = make([]protoimpl.MessageInfo, 15)
+var file_marketdata_v1_marketdata_proto_msgTypes = make([]protoimpl.MessageInfo, 22)
 var file_marketdata_v1_marketdata_proto_goTypes = []any{
-	(*GetTopOfBookRequest)(nil),        // 0: marketdata.v1.GetTopOfBookRequest
-	(*GetTopOfBookResponse)(nil),       // 1: marketdata.v1.GetTopOfBookResponse
-	(*GetMarkPriceRequest)(nil),        // 2: marketdata.v1.GetMarkPriceRequest
-	(*GetMarkPriceResponse)(nil),       // 3: marketdata.v1.GetMarkPriceResponse
-	(*ConvertRequest)(nil),             // 4: marketdata.v1.ConvertRequest
-	(*ConvertResponse)(nil),            // 5: marketdata.v1.ConvertResponse
-	(*GetSymbolRequest)(nil),           // 6: marketdata.v1.GetSymbolRequest
-	(*GetSymbolByCodeRequest)(nil),     // 7: marketdata.v1.GetSymbolByCodeRequest
-	(*ListSymbolsRequest)(nil),         // 8: marketdata.v1.ListSymbolsRequest
-	(*SymbolInfo)(nil),                 // 9: marketdata.v1.SymbolInfo
-	(*GetSymbolResponse)(nil),          // 10: marketdata.v1.GetSymbolResponse
-	(*ListSymbolsResponse)(nil),        // 11: marketdata.v1.ListSymbolsResponse
-	(*GetTradingSessionsRequest)(nil),  // 12: marketdata.v1.GetTradingSessionsRequest
-	(*TradingSession)(nil),             // 13: marketdata.v1.TradingSession
-	(*GetTradingSessionsResponse)(nil), // 14: marketdata.v1.GetTradingSessionsResponse
+	(*GetTopOfBookRequest)(nil),          // 0: marketdata.v1.GetTopOfBookRequest
+	(*GetTopOfBookResponse)(nil),         // 1: marketdata.v1.GetTopOfBookResponse
+	(*GetMarkPriceRequest)(nil),          // 2: marketdata.v1.GetMarkPriceRequest
+	(*GetMarkPriceResponse)(nil),         // 3: marketdata.v1.GetMarkPriceResponse
+	(*ConvertRequest)(nil),               // 4: marketdata.v1.ConvertRequest
+	(*ConvertResponse)(nil),              // 5: marketdata.v1.ConvertResponse
+	(*GetSymbolRequest)(nil),             // 6: marketdata.v1.GetSymbolRequest
+	(*GetSymbolByCodeRequest)(nil),       // 7: marketdata.v1.GetSymbolByCodeRequest
+	(*ListSymbolsRequest)(nil),           // 8: marketdata.v1.ListSymbolsRequest
+	(*SymbolInfo)(nil),                   // 9: marketdata.v1.SymbolInfo
+	(*GetSymbolResponse)(nil),            // 10: marketdata.v1.GetSymbolResponse
+	(*ListSymbolsResponse)(nil),          // 11: marketdata.v1.ListSymbolsResponse
+	(*GetTradingSessionsRequest)(nil),    // 12: marketdata.v1.GetTradingSessionsRequest
+	(*TradingSession)(nil),               // 13: marketdata.v1.TradingSession
+	(*GetTradingSessionsResponse)(nil),   // 14: marketdata.v1.GetTradingSessionsResponse
+	(*GetHistoricalCandlesRequest)(nil),  // 15: marketdata.v1.GetHistoricalCandlesRequest
+	(*GetHistoricalCandlesResponse)(nil), // 16: marketdata.v1.GetHistoricalCandlesResponse
+	(*GetHistoricalTicksRequest)(nil),    // 17: marketdata.v1.GetHistoricalTicksRequest
+	(*GetHistoricalTicksResponse)(nil),   // 18: marketdata.v1.GetHistoricalTicksResponse
+	(*GetSymbolInfoRequest)(nil),         // 19: marketdata.v1.GetSymbolInfoRequest
+	(*SymbolInfoDetailed)(nil),           // 20: marketdata.v1.SymbolInfoDetailed
+	(*GetSymbolInfoResponse)(nil),        // 21: marketdata.v1.GetSymbolInfoResponse
 }
 var file_marketdata_v1_marketdata_proto_depIdxs = []int32{
 	9,  // 0: marketdata.v1.GetSymbolResponse.symbol:type_name -> marketdata.v1.SymbolInfo
 	9,  // 1: marketdata.v1.ListSymbolsResponse.symbols:type_name -> marketdata.v1.SymbolInfo
 	13, // 2: marketdata.v1.GetTradingSessionsResponse.sessions:type_name -> marketdata.v1.TradingSession
-	0,  // 3: marketdata.v1.MarketData.GetTopOfBook:input_type -> marketdata.v1.GetTopOfBookRequest
-	2,  // 4: marketdata.v1.MarketData.GetMarkPrice:input_type -> marketdata.v1.GetMarkPriceRequest
-	4,  // 5: marketdata.v1.MarketData.Convert:input_type -> marketdata.v1.ConvertRequest
-	6,  // 6: marketdata.v1.MarketData.GetSymbol:input_type -> marketdata.v1.GetSymbolRequest
-	7,  // 7: marketdata.v1.MarketData.GetSymbolByCode:input_type -> marketdata.v1.GetSymbolByCodeRequest
-	8,  // 8: marketdata.v1.MarketData.ListSymbols:input_type -> marketdata.v1.ListSymbolsRequest
-	12, // 9: marketdata.v1.MarketData.GetTradingSessions:input_type -> marketdata.v1.GetTradingSessionsRequest
-	1,  // 10: marketdata.v1.MarketData.GetTopOfBook:output_type -> marketdata.v1.GetTopOfBookResponse
-	3,  // 11: marketdata.v1.MarketData.GetMarkPrice:output_type -> marketdata.v1.GetMarkPriceResponse
-	5,  // 12: marketdata.v1.MarketData.Convert:output_type -> marketdata.v1.ConvertResponse
-	10, // 13: marketdata.v1.MarketData.GetSymbol:output_type -> marketdata.v1.GetSymbolResponse
-	10, // 14: marketdata.v1.MarketData.GetSymbolByCode:output_type -> marketdata.v1.GetSymbolResponse
-	11, // 15: marketdata.v1.MarketData.ListSymbols:output_type -> marketdata.v1.ListSymbolsResponse
-	14, // 16: marketdata.v1.MarketData.GetTradingSessions:output_type -> marketdata.v1.GetTradingSessionsResponse
-	10, // [10:17] is the sub-list for method output_type
-	3,  // [3:10] is the sub-list for method input_type
-	3,  // [3:3] is the sub-list for extension type_name
-	3,  // [3:3] is the sub-list for extension extendee
-	0,  // [0:3] is the sub-list for field type_name
+	20, // 3: marketdata.v1.GetSymbolInfoResponse.symbol:type_name -> marketdata.v1.SymbolInfoDetailed
+	0,  // 4: marketdata.v1.MarketData.GetTopOfBook:input_type -> marketdata.v1.GetTopOfBookRequest
+	2,  // 5: marketdata.v1.MarketData.GetMarkPrice:input_type -> marketdata.v1.GetMarkPriceRequest
+	4,  // 6: marketdata.v1.MarketData.Convert:input_type -> marketdata.v1.ConvertRequest
+	6,  // 7: marketdata.v1.MarketData.GetSymbol:input_type -> marketdata.v1.GetSymbolRequest
+	7,  // 8: marketdata.v1.MarketData.GetSymbolByCode:input_type -> marketdata.v1.GetSymbolByCodeRequest
+	8,  // 9: marketdata.v1.MarketData.ListSymbols:input_type -> marketdata.v1.ListSymbolsRequest
+	12, // 10: marketdata.v1.MarketData.GetTradingSessions:input_type -> marketdata.v1.GetTradingSessionsRequest
+	15, // 11: marketdata.v1.MarketData.GetHistoricalCandles:input_type -> marketdata.v1.GetHistoricalCandlesRequest
+	17, // 12: marketdata.v1.MarketData.GetHistoricalTicks:input_type -> marketdata.v1.GetHistoricalTicksRequest
+	19, // 13: marketdata.v1.MarketData.GetSymbolInfo:input_type -> marketdata.v1.GetSymbolInfoRequest
+	1,  // 14: marketdata.v1.MarketData.GetTopOfBook:output_type -> marketdata.v1.GetTopOfBookResponse
+	3,  // 15: marketdata.v1.MarketData.GetMarkPrice:output_type -> marketdata.v1.GetMarkPriceResponse
+	5,  // 16: marketdata.v1.MarketData.Convert:output_type -> marketdata.v1.ConvertResponse
+	10, // 17: marketdata.v1.MarketData.GetSymbol:output_type -> marketdata.v1.GetSymbolResponse
+	10, // 18: marketdata.v1.MarketData.GetSymbolByCode:output_type -> marketdata.v1.GetSymbolResponse
+	11, // 19: marketdata.v1.MarketData.ListSymbols:output_type -> marketdata.v1.ListSymbolsResponse
+	14, // 20: marketdata.v1.MarketData.GetTradingSessions:output_type -> marketdata.v1.GetTradingSessionsResponse
+	16, // 21: marketdata.v1.MarketData.GetHistoricalCandles:output_type -> marketdata.v1.GetHistoricalCandlesResponse
+	18, // 22: marketdata.v1.MarketData.GetHistoricalTicks:output_type -> marketdata.v1.GetHistoricalTicksResponse
+	21, // 23: marketdata.v1.MarketData.GetSymbolInfo:output_type -> marketdata.v1.GetSymbolInfoResponse
+	14, // [14:24] is the sub-list for method output_type
+	4,  // [4:14] is the sub-list for method input_type
+	4,  // [4:4] is the sub-list for extension type_name
+	4,  // [4:4] is the sub-list for extension extendee
+	0,  // [0:4] is the sub-list for field type_name
 }
 
 func init() { file_marketdata_v1_marketdata_proto_init() }
@@ -1142,7 +1699,7 @@ func file_marketdata_v1_marketdata_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_marketdata_v1_marketdata_proto_rawDesc), len(file_marketdata_v1_marketdata_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   15,
+			NumMessages:   22,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

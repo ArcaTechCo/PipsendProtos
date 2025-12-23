@@ -19,13 +19,16 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	MarketData_GetTopOfBook_FullMethodName       = "/marketdata.v1.MarketData/GetTopOfBook"
-	MarketData_GetMarkPrice_FullMethodName       = "/marketdata.v1.MarketData/GetMarkPrice"
-	MarketData_Convert_FullMethodName            = "/marketdata.v1.MarketData/Convert"
-	MarketData_GetSymbol_FullMethodName          = "/marketdata.v1.MarketData/GetSymbol"
-	MarketData_GetSymbolByCode_FullMethodName    = "/marketdata.v1.MarketData/GetSymbolByCode"
-	MarketData_ListSymbols_FullMethodName        = "/marketdata.v1.MarketData/ListSymbols"
-	MarketData_GetTradingSessions_FullMethodName = "/marketdata.v1.MarketData/GetTradingSessions"
+	MarketData_GetTopOfBook_FullMethodName         = "/marketdata.v1.MarketData/GetTopOfBook"
+	MarketData_GetMarkPrice_FullMethodName         = "/marketdata.v1.MarketData/GetMarkPrice"
+	MarketData_Convert_FullMethodName              = "/marketdata.v1.MarketData/Convert"
+	MarketData_GetSymbol_FullMethodName            = "/marketdata.v1.MarketData/GetSymbol"
+	MarketData_GetSymbolByCode_FullMethodName      = "/marketdata.v1.MarketData/GetSymbolByCode"
+	MarketData_ListSymbols_FullMethodName          = "/marketdata.v1.MarketData/ListSymbols"
+	MarketData_GetTradingSessions_FullMethodName   = "/marketdata.v1.MarketData/GetTradingSessions"
+	MarketData_GetHistoricalCandles_FullMethodName = "/marketdata.v1.MarketData/GetHistoricalCandles"
+	MarketData_GetHistoricalTicks_FullMethodName   = "/marketdata.v1.MarketData/GetHistoricalTicks"
+	MarketData_GetSymbolInfo_FullMethodName        = "/marketdata.v1.MarketData/GetSymbolInfo"
 )
 
 // MarketDataClient is the client API for MarketData service.
@@ -48,6 +51,12 @@ type MarketDataClient interface {
 	ListSymbols(ctx context.Context, in *ListSymbolsRequest, opts ...grpc.CallOption) (*ListSymbolsResponse, error)
 	// GetTradingSessions returns trading sessions for a symbol
 	GetTradingSessions(ctx context.Context, in *GetTradingSessionsRequest, opts ...grpc.CallOption) (*GetTradingSessionsResponse, error)
+	// GetHistoricalCandles streams historical OHLC candles for a symbol
+	GetHistoricalCandles(ctx context.Context, in *GetHistoricalCandlesRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[GetHistoricalCandlesResponse], error)
+	// GetHistoricalTicks streams historical tick data (bid/ask) for a symbol
+	GetHistoricalTicks(ctx context.Context, in *GetHistoricalTicksRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[GetHistoricalTicksResponse], error)
+	// GetSymbolInfo returns detailed symbol information for trading
+	GetSymbolInfo(ctx context.Context, in *GetSymbolInfoRequest, opts ...grpc.CallOption) (*GetSymbolInfoResponse, error)
 }
 
 type marketDataClient struct {
@@ -128,6 +137,54 @@ func (c *marketDataClient) GetTradingSessions(ctx context.Context, in *GetTradin
 	return out, nil
 }
 
+func (c *marketDataClient) GetHistoricalCandles(ctx context.Context, in *GetHistoricalCandlesRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[GetHistoricalCandlesResponse], error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	stream, err := c.cc.NewStream(ctx, &MarketData_ServiceDesc.Streams[0], MarketData_GetHistoricalCandles_FullMethodName, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &grpc.GenericClientStream[GetHistoricalCandlesRequest, GetHistoricalCandlesResponse]{ClientStream: stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type MarketData_GetHistoricalCandlesClient = grpc.ServerStreamingClient[GetHistoricalCandlesResponse]
+
+func (c *marketDataClient) GetHistoricalTicks(ctx context.Context, in *GetHistoricalTicksRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[GetHistoricalTicksResponse], error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	stream, err := c.cc.NewStream(ctx, &MarketData_ServiceDesc.Streams[1], MarketData_GetHistoricalTicks_FullMethodName, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &grpc.GenericClientStream[GetHistoricalTicksRequest, GetHistoricalTicksResponse]{ClientStream: stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type MarketData_GetHistoricalTicksClient = grpc.ServerStreamingClient[GetHistoricalTicksResponse]
+
+func (c *marketDataClient) GetSymbolInfo(ctx context.Context, in *GetSymbolInfoRequest, opts ...grpc.CallOption) (*GetSymbolInfoResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetSymbolInfoResponse)
+	err := c.cc.Invoke(ctx, MarketData_GetSymbolInfo_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MarketDataServer is the server API for MarketData service.
 // All implementations must embed UnimplementedMarketDataServer
 // for forward compatibility.
@@ -148,6 +205,12 @@ type MarketDataServer interface {
 	ListSymbols(context.Context, *ListSymbolsRequest) (*ListSymbolsResponse, error)
 	// GetTradingSessions returns trading sessions for a symbol
 	GetTradingSessions(context.Context, *GetTradingSessionsRequest) (*GetTradingSessionsResponse, error)
+	// GetHistoricalCandles streams historical OHLC candles for a symbol
+	GetHistoricalCandles(*GetHistoricalCandlesRequest, grpc.ServerStreamingServer[GetHistoricalCandlesResponse]) error
+	// GetHistoricalTicks streams historical tick data (bid/ask) for a symbol
+	GetHistoricalTicks(*GetHistoricalTicksRequest, grpc.ServerStreamingServer[GetHistoricalTicksResponse]) error
+	// GetSymbolInfo returns detailed symbol information for trading
+	GetSymbolInfo(context.Context, *GetSymbolInfoRequest) (*GetSymbolInfoResponse, error)
 	mustEmbedUnimplementedMarketDataServer()
 }
 
@@ -178,6 +241,15 @@ func (UnimplementedMarketDataServer) ListSymbols(context.Context, *ListSymbolsRe
 }
 func (UnimplementedMarketDataServer) GetTradingSessions(context.Context, *GetTradingSessionsRequest) (*GetTradingSessionsResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetTradingSessions not implemented")
+}
+func (UnimplementedMarketDataServer) GetHistoricalCandles(*GetHistoricalCandlesRequest, grpc.ServerStreamingServer[GetHistoricalCandlesResponse]) error {
+	return status.Error(codes.Unimplemented, "method GetHistoricalCandles not implemented")
+}
+func (UnimplementedMarketDataServer) GetHistoricalTicks(*GetHistoricalTicksRequest, grpc.ServerStreamingServer[GetHistoricalTicksResponse]) error {
+	return status.Error(codes.Unimplemented, "method GetHistoricalTicks not implemented")
+}
+func (UnimplementedMarketDataServer) GetSymbolInfo(context.Context, *GetSymbolInfoRequest) (*GetSymbolInfoResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetSymbolInfo not implemented")
 }
 func (UnimplementedMarketDataServer) mustEmbedUnimplementedMarketDataServer() {}
 func (UnimplementedMarketDataServer) testEmbeddedByValue()                    {}
@@ -326,6 +398,46 @@ func _MarketData_GetTradingSessions_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
+func _MarketData_GetHistoricalCandles_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(GetHistoricalCandlesRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(MarketDataServer).GetHistoricalCandles(m, &grpc.GenericServerStream[GetHistoricalCandlesRequest, GetHistoricalCandlesResponse]{ServerStream: stream})
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type MarketData_GetHistoricalCandlesServer = grpc.ServerStreamingServer[GetHistoricalCandlesResponse]
+
+func _MarketData_GetHistoricalTicks_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(GetHistoricalTicksRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(MarketDataServer).GetHistoricalTicks(m, &grpc.GenericServerStream[GetHistoricalTicksRequest, GetHistoricalTicksResponse]{ServerStream: stream})
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type MarketData_GetHistoricalTicksServer = grpc.ServerStreamingServer[GetHistoricalTicksResponse]
+
+func _MarketData_GetSymbolInfo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetSymbolInfoRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MarketDataServer).GetSymbolInfo(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MarketData_GetSymbolInfo_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MarketDataServer).GetSymbolInfo(ctx, req.(*GetSymbolInfoRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // MarketData_ServiceDesc is the grpc.ServiceDesc for MarketData service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -361,7 +473,22 @@ var MarketData_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "GetTradingSessions",
 			Handler:    _MarketData_GetTradingSessions_Handler,
 		},
+		{
+			MethodName: "GetSymbolInfo",
+			Handler:    _MarketData_GetSymbolInfo_Handler,
+		},
 	},
-	Streams:  []grpc.StreamDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "GetHistoricalCandles",
+			Handler:       _MarketData_GetHistoricalCandles_Handler,
+			ServerStreams: true,
+		},
+		{
+			StreamName:    "GetHistoricalTicks",
+			Handler:       _MarketData_GetHistoricalTicks_Handler,
+			ServerStreams: true,
+		},
+	},
 	Metadata: "marketdata/v1/marketdata.proto",
 }

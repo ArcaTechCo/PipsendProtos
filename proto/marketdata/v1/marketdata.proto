@@ -26,6 +26,15 @@ service MarketData {
   
   // GetTradingSessions returns trading sessions for a symbol
   rpc GetTradingSessions(GetTradingSessionsRequest) returns (GetTradingSessionsResponse);
+  
+  // GetHistoricalCandles streams historical OHLC candles for a symbol
+  rpc GetHistoricalCandles(GetHistoricalCandlesRequest) returns (stream GetHistoricalCandlesResponse);
+  
+  // GetHistoricalTicks streams historical tick data (bid/ask) for a symbol
+  rpc GetHistoricalTicks(GetHistoricalTicksRequest) returns (stream GetHistoricalTicksResponse);
+  
+  // GetSymbolInfo returns detailed symbol information for trading
+  rpc GetSymbolInfo(GetSymbolInfoRequest) returns (GetSymbolInfoResponse);
 }
 
 // GetTopOfBookRequest requests top of book data for a symbol
@@ -137,4 +146,64 @@ message GetTradingSessionsResponse {
   string symbol_code = 3;                // "AAPL", "EURUSD", etc.
   repeated TradingSession sessions = 4;  // List of trading sessions
   string source = 5;                     // "SYMBOL_ONLY", "PROVIDER_ONLY", "INTERSECTION", "24_7"
+}
+
+// ========== Historical Data Messages ==========
+
+// GetHistoricalCandlesRequest requests historical OHLC candles
+message GetHistoricalCandlesRequest {
+  int64 symbol_id = 1;    // Symbol ID from database
+  string timeframe = 2;   // Timeframe: "M1", "M5", "M15", "M30", "H1", "H4", "D1", "W1", "MN"
+  int64 from_time = 3;    // Start timestamp (Unix seconds)
+  int64 to_time = 4;      // End timestamp (Unix seconds)
+}
+
+// GetHistoricalCandlesResponse streams individual candles
+message GetHistoricalCandlesResponse {
+  int64 time = 1;      // Candle timestamp (Unix seconds)
+  double open = 2;     // Open price
+  double high = 3;     // High price
+  double low = 4;      // Low price
+  double close = 5;    // Close price
+  int64 volume = 6;    // Volume (0 if not available)
+}
+
+// GetHistoricalTicksRequest requests historical tick data
+message GetHistoricalTicksRequest {
+  int64 symbol_id = 1;    // Symbol ID from database
+  int64 from_time = 2;    // Start timestamp (Unix seconds)
+  int64 to_time = 3;      // End timestamp (Unix seconds)
+}
+
+// GetHistoricalTicksResponse streams individual ticks
+message GetHistoricalTicksResponse {
+  int64 time = 1;      // Tick timestamp (Unix seconds)
+  double bid = 2;      // Bid price
+  double ask = 3;      // Ask price
+}
+
+// GetSymbolInfoRequest requests detailed symbol information
+message GetSymbolInfoRequest {
+  int64 symbol_id = 1;    // Symbol ID from database
+}
+
+// SymbolInfoDetailed contains complete trading symbol information
+message SymbolInfoDetailed {
+  int64 symbol_id = 1;           // Symbol ID
+  string symbol_name = 2;        // Symbol name/code (e.g., "EURUSD")
+  double contract_size = 3;      // Contract size (e.g., 100000 for forex)
+  int32 digits = 4;              // Number of decimal places (e.g., 5 for EURUSD)
+  double point = 5;              // Point value (e.g., 0.00001)
+  double tick_size = 6;          // Minimum tick size
+  double tick_value = 7;         // Value of one tick
+  double spread = 8;             // Current spread
+  double min_trade_size = 9;     // Minimum trade size
+  double max_trade_size = 10;    // Maximum trade size
+  double required_margin = 11;   // Required margin percentage
+  string asset_type = 12;        // Asset type: "forex", "crypto", "stock", etc.
+}
+
+// GetSymbolInfoResponse returns detailed symbol information
+message GetSymbolInfoResponse {
+  SymbolInfoDetailed symbol = 1;
 }
