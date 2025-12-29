@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  proto-gen:
+    image: bufbuild/buf:latest
+    volumes:
+      - .:/workspace
+    working_dir: /workspace
+    command: generate
+    profiles:
+      - tools

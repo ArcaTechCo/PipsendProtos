@@ -7,6 +7,7 @@
 package accountsv1
 
 import (
+	v1 "github.com/ArcaTechCo/PipsendProtos/gen/go/marketdata/v1"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -571,6 +572,8 @@ type AccountInfo struct {
 	IsActive       bool                   `protobuf:"varint,9,opt,name=is_active,json=isActive,proto3" json:"is_active,omitempty"`                     // Whether the account is active
 	Login          string                 `protobuf:"bytes,10,opt,name=login,proto3" json:"login,omitempty"`                                           // Trading account login
 	Leverage       int32                  `protobuf:"varint,11,opt,name=leverage,proto3" json:"leverage,omitempty"`                                    // Account leverage (e.g., 100 for 1:100)
+	ProviderId     *uint32                `protobuf:"varint,20,opt,name=provider_id,json=providerId,proto3,oneof" json:"provider_id,omitempty"`        // Provider ID (override from group)
+	Provider       *v1.Provider           `protobuf:"bytes,21,opt,name=provider,proto3,oneof" json:"provider,omitempty"`                               // Provider details (if available)
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
@@ -680,6 +683,20 @@ func (x *AccountInfo) GetLeverage() int32 {
 		return x.Leverage
 	}
 	return 0
+}
+
+func (x *AccountInfo) GetProviderId() uint32 {
+	if x != nil && x.ProviderId != nil {
+		return *x.ProviderId
+	}
+	return 0
+}
+
+func (x *AccountInfo) GetProvider() *v1.Provider {
+	if x != nil {
+		return x.Provider
+	}
+	return nil
 }
 
 // GetAccountResponse returns account information
@@ -804,8 +821,11 @@ type TradingGroupPolicyInfo struct {
 	InactivityPeriod int32 `protobuf:"varint,22,opt,name=inactivity_period,json=inactivityPeriod,proto3" json:"inactivity_period,omitempty"` // Inactivity period (days)
 	SortOrder        int32 `protobuf:"varint,23,opt,name=sort_order,json=sortOrder,proto3" json:"sort_order,omitempty"`                      // Display sort order
 	// Hierarchy
-	ParentId      int64  `protobuf:"varint,24,opt,name=parent_id,json=parentId,proto3" json:"parent_id,omitempty"`   // Parent group ID (0 if root)
-	GroupPath     string `protobuf:"bytes,25,opt,name=group_path,json=groupPath,proto3" json:"group_path,omitempty"` // Hierarchical path: "Standard/VIP/Demo"
+	ParentId  int64  `protobuf:"varint,24,opt,name=parent_id,json=parentId,proto3" json:"parent_id,omitempty"`   // Parent group ID (0 if root)
+	GroupPath string `protobuf:"bytes,25,opt,name=group_path,json=groupPath,proto3" json:"group_path,omitempty"` // Hierarchical path: "Standard/VIP/Demo"
+	// Provider configuration
+	ProviderId    *uint32      `protobuf:"varint,30,opt,name=provider_id,json=providerId,proto3,oneof" json:"provider_id,omitempty"` // Provider ID for this group
+	Provider      *v1.Provider `protobuf:"bytes,31,opt,name=provider,proto3,oneof" json:"provider,omitempty"`                        // Provider details (if available)
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -1013,6 +1033,20 @@ func (x *TradingGroupPolicyInfo) GetGroupPath() string {
 		return x.GroupPath
 	}
 	return ""
+}
+
+func (x *TradingGroupPolicyInfo) GetProviderId() uint32 {
+	if x != nil && x.ProviderId != nil {
+		return *x.ProviderId
+	}
+	return 0
+}
+
+func (x *TradingGroupPolicyInfo) GetProvider() *v1.Provider {
+	if x != nil {
+		return x.Provider
+	}
+	return nil
 }
 
 // GetTradingGroupPolicyResponse returns trading group policy
@@ -1678,7 +1712,7 @@ var File_accounts_v1_accounts_proto protoreflect.FileDescriptor
 const file_accounts_v1_accounts_proto_rawDesc = "" +
 	"\n" +
 	"\x1aaccounts/v1/accounts.proto\x12\n" +
-	"accountsv1\";\n" +
+	"accountsv1\x1a\x1emarketdata/v1/marketdata.proto\";\n" +
 	"\x05Money\x12\x1a\n" +
 	"\bcurrency\x18\x01 \x01(\tR\bcurrency\x12\x16\n" +
 	"\x06amount\x18\x02 \x01(\tR\x06amount\"\x9e\x02\n" +
@@ -1735,7 +1769,7 @@ const file_accounts_v1_accounts_proto_rawDesc = "" +
 	"releasedAt\"2\n" +
 	"\x11GetAccountRequest\x12\x1d\n" +
 	"\n" +
-	"account_id\x18\x01 \x01(\x03R\taccountId\"\xd8\x02\n" +
+	"account_id\x18\x01 \x01(\x03R\taccountId\"\xd5\x03\n" +
 	"\vAccountInfo\x12\x1d\n" +
 	"\n" +
 	"account_id\x18\x01 \x01(\x03R\taccountId\x12(\n" +
@@ -1751,11 +1785,16 @@ const file_accounts_v1_accounts_proto_rawDesc = "" +
 	"\tis_active\x18\t \x01(\bR\bisActive\x12\x14\n" +
 	"\x05login\x18\n" +
 	" \x01(\tR\x05login\x12\x1a\n" +
-	"\bleverage\x18\v \x01(\x05R\bleverage\"G\n" +
+	"\bleverage\x18\v \x01(\x05R\bleverage\x12$\n" +
+	"\vprovider_id\x18\x14 \x01(\rH\x00R\n" +
+	"providerId\x88\x01\x01\x128\n" +
+	"\bprovider\x18\x15 \x01(\v2\x17.marketdata.v1.ProviderH\x01R\bprovider\x88\x01\x01B\x0e\n" +
+	"\f_provider_idB\v\n" +
+	"\t_provider\"G\n" +
 	"\x12GetAccountResponse\x121\n" +
 	"\aaccount\x18\x01 \x01(\v2\x17.accountsv1.AccountInfoR\aaccount\"H\n" +
 	"\x1cGetTradingGroupPolicyRequest\x12(\n" +
-	"\x10trading_group_id\x18\x01 \x01(\x03R\x0etradingGroupId\"\xeb\a\n" +
+	"\x10trading_group_id\x18\x01 \x01(\x03R\x0etradingGroupId\"\xe8\b\n" +
 	"\x16TradingGroupPolicyInfo\x12(\n" +
 	"\x10trading_group_id\x18\x01 \x01(\x03R\x0etradingGroupId\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12\x18\n" +
@@ -1786,7 +1825,12 @@ const file_accounts_v1_accounts_proto_rawDesc = "" +
 	"sort_order\x18\x17 \x01(\x05R\tsortOrder\x12\x1b\n" +
 	"\tparent_id\x18\x18 \x01(\x03R\bparentId\x12\x1d\n" +
 	"\n" +
-	"group_path\x18\x19 \x01(\tR\tgroupPath\"[\n" +
+	"group_path\x18\x19 \x01(\tR\tgroupPath\x12$\n" +
+	"\vprovider_id\x18\x1e \x01(\rH\x00R\n" +
+	"providerId\x88\x01\x01\x128\n" +
+	"\bprovider\x18\x1f \x01(\v2\x17.marketdata.v1.ProviderH\x01R\bprovider\x88\x01\x01B\x0e\n" +
+	"\f_provider_idB\v\n" +
+	"\t_provider\"[\n" +
 	"\x1dGetTradingGroupPolicyResponse\x12:\n" +
 	"\x06policy\x18\x01 \x01(\v2\".accountsv1.TradingGroupPolicyInfoR\x06policy\"\xa9\x02\n" +
 	"\x0eDepositRequest\x12\x1d\n" +
@@ -1903,6 +1947,7 @@ var file_accounts_v1_accounts_proto_goTypes = []any{
 	nil,                                   // 24: accountsv1.ReleaseHoldRequest.MetadataEntry
 	nil,                                   // 25: accountsv1.DepositRequest.MetadataEntry
 	nil,                                   // 26: accountsv1.WithdrawRequest.MetadataEntry
+	(*v1.Provider)(nil),                   // 27: marketdata.v1.Provider
 }
 var file_accounts_v1_accounts_proto_depIdxs = []int32{
 	0,  // 0: accountsv1.CreateHoldRequest.money:type_name -> accountsv1.Money
@@ -1914,34 +1959,36 @@ var file_accounts_v1_accounts_proto_depIdxs = []int32{
 	0,  // 6: accountsv1.ReleaseHoldRequest.money:type_name -> accountsv1.Money
 	24, // 7: accountsv1.ReleaseHoldRequest.metadata:type_name -> accountsv1.ReleaseHoldRequest.MetadataEntry
 	0,  // 8: accountsv1.ReleaseHoldResponse.money:type_name -> accountsv1.Money
-	8,  // 9: accountsv1.GetAccountResponse.account:type_name -> accountsv1.AccountInfo
-	11, // 10: accountsv1.GetTradingGroupPolicyResponse.policy:type_name -> accountsv1.TradingGroupPolicyInfo
-	25, // 11: accountsv1.DepositRequest.metadata:type_name -> accountsv1.DepositRequest.MetadataEntry
-	26, // 12: accountsv1.WithdrawRequest.metadata:type_name -> accountsv1.WithdrawRequest.MetadataEntry
-	18, // 13: accountsv1.GetAccountByLoginResponse.account:type_name -> accountsv1.AccountByLoginInfo
-	1,  // 14: accountsv1.Accounts.CreateHold:input_type -> accountsv1.CreateHoldRequest
-	3,  // 15: accountsv1.Accounts.UseHold:input_type -> accountsv1.UseHoldRequest
-	5,  // 16: accountsv1.Accounts.ReleaseHold:input_type -> accountsv1.ReleaseHoldRequest
-	7,  // 17: accountsv1.Accounts.GetAccount:input_type -> accountsv1.GetAccountRequest
-	10, // 18: accountsv1.Accounts.GetTradingGroupPolicy:input_type -> accountsv1.GetTradingGroupPolicyRequest
-	13, // 19: accountsv1.Accounts.Deposit:input_type -> accountsv1.DepositRequest
-	15, // 20: accountsv1.Accounts.Withdraw:input_type -> accountsv1.WithdrawRequest
-	17, // 21: accountsv1.Accounts.GetAccountByLogin:input_type -> accountsv1.GetAccountByLoginRequest
-	20, // 22: accountsv1.Accounts.GetRights:input_type -> accountsv1.GetRightsRequest
-	2,  // 23: accountsv1.Accounts.CreateHold:output_type -> accountsv1.CreateHoldResponse
-	4,  // 24: accountsv1.Accounts.UseHold:output_type -> accountsv1.UseHoldResponse
-	6,  // 25: accountsv1.Accounts.ReleaseHold:output_type -> accountsv1.ReleaseHoldResponse
-	9,  // 26: accountsv1.Accounts.GetAccount:output_type -> accountsv1.GetAccountResponse
-	12, // 27: accountsv1.Accounts.GetTradingGroupPolicy:output_type -> accountsv1.GetTradingGroupPolicyResponse
-	14, // 28: accountsv1.Accounts.Deposit:output_type -> accountsv1.DepositResponse
-	16, // 29: accountsv1.Accounts.Withdraw:output_type -> accountsv1.WithdrawResponse
-	19, // 30: accountsv1.Accounts.GetAccountByLogin:output_type -> accountsv1.GetAccountByLoginResponse
-	21, // 31: accountsv1.Accounts.GetRights:output_type -> accountsv1.GetRightsResponse
-	23, // [23:32] is the sub-list for method output_type
-	14, // [14:23] is the sub-list for method input_type
-	14, // [14:14] is the sub-list for extension type_name
-	14, // [14:14] is the sub-list for extension extendee
-	0,  // [0:14] is the sub-list for field type_name
+	27, // 9: accountsv1.AccountInfo.provider:type_name -> marketdata.v1.Provider
+	8,  // 10: accountsv1.GetAccountResponse.account:type_name -> accountsv1.AccountInfo
+	27, // 11: accountsv1.TradingGroupPolicyInfo.provider:type_name -> marketdata.v1.Provider
+	11, // 12: accountsv1.GetTradingGroupPolicyResponse.policy:type_name -> accountsv1.TradingGroupPolicyInfo
+	25, // 13: accountsv1.DepositRequest.metadata:type_name -> accountsv1.DepositRequest.MetadataEntry
+	26, // 14: accountsv1.WithdrawRequest.metadata:type_name -> accountsv1.WithdrawRequest.MetadataEntry
+	18, // 15: accountsv1.GetAccountByLoginResponse.account:type_name -> accountsv1.AccountByLoginInfo
+	1,  // 16: accountsv1.Accounts.CreateHold:input_type -> accountsv1.CreateHoldRequest
+	3,  // 17: accountsv1.Accounts.UseHold:input_type -> accountsv1.UseHoldRequest
+	5,  // 18: accountsv1.Accounts.ReleaseHold:input_type -> accountsv1.ReleaseHoldRequest
+	7,  // 19: accountsv1.Accounts.GetAccount:input_type -> accountsv1.GetAccountRequest
+	10, // 20: accountsv1.Accounts.GetTradingGroupPolicy:input_type -> accountsv1.GetTradingGroupPolicyRequest
+	13, // 21: accountsv1.Accounts.Deposit:input_type -> accountsv1.DepositRequest
+	15, // 22: accountsv1.Accounts.Withdraw:input_type -> accountsv1.WithdrawRequest
+	17, // 23: accountsv1.Accounts.GetAccountByLogin:input_type -> accountsv1.GetAccountByLoginRequest
+	20, // 24: accountsv1.Accounts.GetRights:input_type -> accountsv1.GetRightsRequest
+	2,  // 25: accountsv1.Accounts.CreateHold:output_type -> accountsv1.CreateHoldResponse
+	4,  // 26: accountsv1.Accounts.UseHold:output_type -> accountsv1.UseHoldResponse
+	6,  // 27: accountsv1.Accounts.ReleaseHold:output_type -> accountsv1.ReleaseHoldResponse
+	9,  // 28: accountsv1.Accounts.GetAccount:output_type -> accountsv1.GetAccountResponse
+	12, // 29: accountsv1.Accounts.GetTradingGroupPolicy:output_type -> accountsv1.GetTradingGroupPolicyResponse
+	14, // 30: accountsv1.Accounts.Deposit:output_type -> accountsv1.DepositResponse
+	16, // 31: accountsv1.Accounts.Withdraw:output_type -> accountsv1.WithdrawResponse
+	19, // 32: accountsv1.Accounts.GetAccountByLogin:output_type -> accountsv1.GetAccountByLoginResponse
+	21, // 33: accountsv1.Accounts.GetRights:output_type -> accountsv1.GetRightsResponse
+	25, // [25:34] is the sub-list for method output_type
+	16, // [16:25] is the sub-list for method input_type
+	16, // [16:16] is the sub-list for extension type_name
+	16, // [16:16] is the sub-list for extension extendee
+	0,  // [0:16] is the sub-list for field type_name
 }
 
 func init() { file_accounts_v1_accounts_proto_init() }
@@ -1949,6 +1996,8 @@ func file_accounts_v1_accounts_proto_init() {
 	if File_accounts_v1_accounts_proto != nil {
 		return
 	}
+	file_accounts_v1_accounts_proto_msgTypes[8].OneofWrappers = []any{}
+	file_accounts_v1_accounts_proto_msgTypes[11].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{

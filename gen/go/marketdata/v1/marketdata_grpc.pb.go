@@ -29,6 +29,8 @@ const (
 	MarketData_GetHistoricalCandles_FullMethodName = "/marketdata.v1.MarketData/GetHistoricalCandles"
 	MarketData_GetHistoricalTicks_FullMethodName   = "/marketdata.v1.MarketData/GetHistoricalTicks"
 	MarketData_GetSymbolInfo_FullMethodName        = "/marketdata.v1.MarketData/GetSymbolInfo"
+	MarketData_GetProvider_FullMethodName          = "/marketdata.v1.MarketData/GetProvider"
+	MarketData_ListProviders_FullMethodName        = "/marketdata.v1.MarketData/ListProviders"
 )
 
 // MarketDataClient is the client API for MarketData service.
@@ -57,6 +59,10 @@ type MarketDataClient interface {
 	GetHistoricalTicks(ctx context.Context, in *GetHistoricalTicksRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[GetHistoricalTicksResponse], error)
 	// GetSymbolInfo returns detailed symbol information for trading
 	GetSymbolInfo(ctx context.Context, in *GetSymbolInfoRequest, opts ...grpc.CallOption) (*GetSymbolInfoResponse, error)
+	// GetProvider returns a provider by ID
+	GetProvider(ctx context.Context, in *GetProviderRequest, opts ...grpc.CallOption) (*GetProviderResponse, error)
+	// ListProviders returns a list of providers with optional filters
+	ListProviders(ctx context.Context, in *ListProvidersRequest, opts ...grpc.CallOption) (*ListProvidersResponse, error)
 }
 
 type marketDataClient struct {
@@ -185,6 +191,26 @@ func (c *marketDataClient) GetSymbolInfo(ctx context.Context, in *GetSymbolInfoR
 	return out, nil
 }
 
+func (c *marketDataClient) GetProvider(ctx context.Context, in *GetProviderRequest, opts ...grpc.CallOption) (*GetProviderResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetProviderResponse)
+	err := c.cc.Invoke(ctx, MarketData_GetProvider_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *marketDataClient) ListProviders(ctx context.Context, in *ListProvidersRequest, opts ...grpc.CallOption) (*ListProvidersResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListProvidersResponse)
+	err := c.cc.Invoke(ctx, MarketData_ListProviders_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // MarketDataServer is the server API for MarketData service.
 // All implementations must embed UnimplementedMarketDataServer
 // for forward compatibility.
@@ -211,6 +237,10 @@ type MarketDataServer interface {
 	GetHistoricalTicks(*GetHistoricalTicksRequest, grpc.ServerStreamingServer[GetHistoricalTicksResponse]) error
 	// GetSymbolInfo returns detailed symbol information for trading
 	GetSymbolInfo(context.Context, *GetSymbolInfoRequest) (*GetSymbolInfoResponse, error)
+	// GetProvider returns a provider by ID
+	GetProvider(context.Context, *GetProviderRequest) (*GetProviderResponse, error)
+	// ListProviders returns a list of providers with optional filters
+	ListProviders(context.Context, *ListProvidersRequest) (*ListProvidersResponse, error)
 	mustEmbedUnimplementedMarketDataServer()
 }
 
@@ -250,6 +280,12 @@ func (UnimplementedMarketDataServer) GetHistoricalTicks(*GetHistoricalTicksReque
 }
 func (UnimplementedMarketDataServer) GetSymbolInfo(context.Context, *GetSymbolInfoRequest) (*GetSymbolInfoResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetSymbolInfo not implemented")
+}
+func (UnimplementedMarketDataServer) GetProvider(context.Context, *GetProviderRequest) (*GetProviderResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetProvider not implemented")
+}
+func (UnimplementedMarketDataServer) ListProviders(context.Context, *ListProvidersRequest) (*ListProvidersResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListProviders not implemented")
 }
 func (UnimplementedMarketDataServer) mustEmbedUnimplementedMarketDataServer() {}
 func (UnimplementedMarketDataServer) testEmbeddedByValue()                    {}
@@ -438,6 +474,42 @@ func _MarketData_GetSymbolInfo_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
+func _MarketData_GetProvider_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetProviderRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MarketDataServer).GetProvider(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MarketData_GetProvider_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MarketDataServer).GetProvider(ctx, req.(*GetProviderRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _MarketData_ListProviders_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListProvidersRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(MarketDataServer).ListProviders(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: MarketData_ListProviders_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(MarketDataServer).ListProviders(ctx, req.(*ListProvidersRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // MarketData_ServiceDesc is the grpc.ServiceDesc for MarketData service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -476,6 +548,14 @@ var MarketData_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetSymbolInfo",
 			Handler:    _MarketData_GetSymbolInfo_Handler,
+		},
+		{
+			MethodName: "GetProvider",
+			Handler:    _MarketData_GetProvider_Handler,
+		},
+		{
+			MethodName: "ListProviders",
+			Handler:    _MarketData_ListProviders_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{

@@ -35,6 +35,12 @@ service MarketData {
   
   // GetSymbolInfo returns detailed symbol information for trading
   rpc GetSymbolInfo(GetSymbolInfoRequest) returns (GetSymbolInfoResponse);
+  
+  // GetProvider returns a provider by ID
+  rpc GetProvider(GetProviderRequest) returns (GetProviderResponse);
+  
+  // ListProviders returns a list of providers with optional filters
+  rpc ListProviders(ListProvidersRequest) returns (ListProvidersResponse);
 }
 
 // GetTopOfBookRequest requests top of book data for a symbol
@@ -206,4 +212,50 @@ message SymbolInfoDetailed {
 // GetSymbolInfoResponse returns detailed symbol information
 message GetSymbolInfoResponse {
   SymbolInfoDetailed symbol = 1;
+}
+
+// ========== Provider Management Messages ==========
+
+// Provider represents a market data or trading provider configuration
+message Provider {
+  uint32 id = 1;                          // Provider ID
+  string name = 2;                        // Provider name: "Polygon", "PrimeXM", etc.
+  string type = 3;                        // Provider type: "fix", "simulator", "websocket", "rest_api"
+  string status = 4;                      // Provider status: "active", "inactive"
+  string capabilities = 5;                // Provider capabilities: "pricing", "trading", "both"
+  string metadata = 6;                    // Configuration metadata as JSON string
+  string connection_mode = 7;             // Connection mode: "fix", "websocket", etc.
+  bool is_active = 8;                     // Whether the provider is active
+  string connect_policy = 9;              // Connection policy: "always", "on_demand", "during_session"
+  int32 heartbeat_timeout_sec = 10;       // Heartbeat timeout in seconds
+  int32 backoff_base_sec = 11;            // Base backoff in seconds for reconnection
+  int32 max_backoff_sec = 12;             // Maximum backoff in seconds
+  bool resubscribe_on_reconnect = 13;     // Auto-resubscribe on reconnect
+}
+
+// GetProviderRequest requests a provider by ID
+message GetProviderRequest {
+  uint32 provider_id = 1;  // Provider ID to retrieve
+}
+
+// GetProviderResponse returns a single provider
+message GetProviderResponse {
+  Provider provider = 1;
+}
+
+// ListProvidersRequest requests a list of providers with optional filters
+message ListProvidersRequest {
+  optional string type = 1;           // Filter by type: "fix", "simulator", "websocket"
+  optional string capabilities = 2;   // Filter by capabilities: "pricing", "trading", "both"
+  optional string status = 3;         // Filter by status: "active", "inactive"
+  int32 page = 4;                     // Page number (default: 1)
+  int32 page_size = 5;                // Page size (default: 50)
+}
+
+// ListProvidersResponse returns a list of providers
+message ListProvidersResponse {
+  repeated Provider providers = 1;    // List of providers
+  int32 total = 2;                    // Total number of providers
+  int32 page = 3;                     // Current page
+  int32 page_size = 4;                // Page size
 }

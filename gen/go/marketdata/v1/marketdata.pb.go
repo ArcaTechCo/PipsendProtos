@@ -1483,6 +1483,383 @@ func (x *GetSymbolInfoResponse) GetSymbol() *SymbolInfoDetailed {
 	return nil
 }
 
+// Provider represents a market data or trading provider configuration
+type Provider struct {
+	state                  protoimpl.MessageState `protogen:"open.v1"`
+	Id                     uint32                 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`                                                                          // Provider ID
+	Name                   string                 `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`                                                                       // Provider name: "Polygon", "PrimeXM", etc.
+	Type                   string                 `protobuf:"bytes,3,opt,name=type,proto3" json:"type,omitempty"`                                                                       // Provider type: "fix", "simulator", "websocket", "rest_api"
+	Status                 string                 `protobuf:"bytes,4,opt,name=status,proto3" json:"status,omitempty"`                                                                   // Provider status: "active", "inactive"
+	Capabilities           string                 `protobuf:"bytes,5,opt,name=capabilities,proto3" json:"capabilities,omitempty"`                                                       // Provider capabilities: "pricing", "trading", "both"
+	Metadata               string                 `protobuf:"bytes,6,opt,name=metadata,proto3" json:"metadata,omitempty"`                                                               // Configuration metadata as JSON string
+	ConnectionMode         string                 `protobuf:"bytes,7,opt,name=connection_mode,json=connectionMode,proto3" json:"connection_mode,omitempty"`                             // Connection mode: "fix", "websocket", etc.
+	IsActive               bool                   `protobuf:"varint,8,opt,name=is_active,json=isActive,proto3" json:"is_active,omitempty"`                                              // Whether the provider is active
+	ConnectPolicy          string                 `protobuf:"bytes,9,opt,name=connect_policy,json=connectPolicy,proto3" json:"connect_policy,omitempty"`                                // Connection policy: "always", "on_demand", "during_session"
+	HeartbeatTimeoutSec    int32                  `protobuf:"varint,10,opt,name=heartbeat_timeout_sec,json=heartbeatTimeoutSec,proto3" json:"heartbeat_timeout_sec,omitempty"`          // Heartbeat timeout in seconds
+	BackoffBaseSec         int32                  `protobuf:"varint,11,opt,name=backoff_base_sec,json=backoffBaseSec,proto3" json:"backoff_base_sec,omitempty"`                         // Base backoff in seconds for reconnection
+	MaxBackoffSec          int32                  `protobuf:"varint,12,opt,name=max_backoff_sec,json=maxBackoffSec,proto3" json:"max_backoff_sec,omitempty"`                            // Maximum backoff in seconds
+	ResubscribeOnReconnect bool                   `protobuf:"varint,13,opt,name=resubscribe_on_reconnect,json=resubscribeOnReconnect,proto3" json:"resubscribe_on_reconnect,omitempty"` // Auto-resubscribe on reconnect
+	unknownFields          protoimpl.UnknownFields
+	sizeCache              protoimpl.SizeCache
+}
+
+func (x *Provider) Reset() {
+	*x = Provider{}
+	mi := &file_marketdata_v1_marketdata_proto_msgTypes[22]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *Provider) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*Provider) ProtoMessage() {}
+
+func (x *Provider) ProtoReflect() protoreflect.Message {
+	mi := &file_marketdata_v1_marketdata_proto_msgTypes[22]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use Provider.ProtoReflect.Descriptor instead.
+func (*Provider) Descriptor() ([]byte, []int) {
+	return file_marketdata_v1_marketdata_proto_rawDescGZIP(), []int{22}
+}
+
+func (x *Provider) GetId() uint32 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *Provider) GetName() string {
+	if x != nil {
+		return x.Name
+	}
+	return ""
+}
+
+func (x *Provider) GetType() string {
+	if x != nil {
+		return x.Type
+	}
+	return ""
+}
+
+func (x *Provider) GetStatus() string {
+	if x != nil {
+		return x.Status
+	}
+	return ""
+}
+
+func (x *Provider) GetCapabilities() string {
+	if x != nil {
+		return x.Capabilities
+	}
+	return ""
+}
+
+func (x *Provider) GetMetadata() string {
+	if x != nil {
+		return x.Metadata
+	}
+	return ""
+}
+
+func (x *Provider) GetConnectionMode() string {
+	if x != nil {
+		return x.ConnectionMode
+	}
+	return ""
+}
+
+func (x *Provider) GetIsActive() bool {
+	if x != nil {
+		return x.IsActive
+	}
+	return false
+}
+
+func (x *Provider) GetConnectPolicy() string {
+	if x != nil {
+		return x.ConnectPolicy
+	}
+	return ""
+}
+
+func (x *Provider) GetHeartbeatTimeoutSec() int32 {
+	if x != nil {
+		return x.HeartbeatTimeoutSec
+	}
+	return 0
+}
+
+func (x *Provider) GetBackoffBaseSec() int32 {
+	if x != nil {
+		return x.BackoffBaseSec
+	}
+	return 0
+}
+
+func (x *Provider) GetMaxBackoffSec() int32 {
+	if x != nil {
+		return x.MaxBackoffSec
+	}
+	return 0
+}
+
+func (x *Provider) GetResubscribeOnReconnect() bool {
+	if x != nil {
+		return x.ResubscribeOnReconnect
+	}
+	return false
+}
+
+// GetProviderRequest requests a provider by ID
+type GetProviderRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	ProviderId    uint32                 `protobuf:"varint,1,opt,name=provider_id,json=providerId,proto3" json:"provider_id,omitempty"` // Provider ID to retrieve
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetProviderRequest) Reset() {
+	*x = GetProviderRequest{}
+	mi := &file_marketdata_v1_marketdata_proto_msgTypes[23]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetProviderRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetProviderRequest) ProtoMessage() {}
+
+func (x *GetProviderRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_marketdata_v1_marketdata_proto_msgTypes[23]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetProviderRequest.ProtoReflect.Descriptor instead.
+func (*GetProviderRequest) Descriptor() ([]byte, []int) {
+	return file_marketdata_v1_marketdata_proto_rawDescGZIP(), []int{23}
+}
+
+func (x *GetProviderRequest) GetProviderId() uint32 {
+	if x != nil {
+		return x.ProviderId
+	}
+	return 0
+}
+
+// GetProviderResponse returns a single provider
+type GetProviderResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Provider      *Provider              `protobuf:"bytes,1,opt,name=provider,proto3" json:"provider,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetProviderResponse) Reset() {
+	*x = GetProviderResponse{}
+	mi := &file_marketdata_v1_marketdata_proto_msgTypes[24]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetProviderResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetProviderResponse) ProtoMessage() {}
+
+func (x *GetProviderResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_marketdata_v1_marketdata_proto_msgTypes[24]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetProviderResponse.ProtoReflect.Descriptor instead.
+func (*GetProviderResponse) Descriptor() ([]byte, []int) {
+	return file_marketdata_v1_marketdata_proto_rawDescGZIP(), []int{24}
+}
+
+func (x *GetProviderResponse) GetProvider() *Provider {
+	if x != nil {
+		return x.Provider
+	}
+	return nil
+}
+
+// ListProvidersRequest requests a list of providers with optional filters
+type ListProvidersRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Type          *string                `protobuf:"bytes,1,opt,name=type,proto3,oneof" json:"type,omitempty"`                    // Filter by type: "fix", "simulator", "websocket"
+	Capabilities  *string                `protobuf:"bytes,2,opt,name=capabilities,proto3,oneof" json:"capabilities,omitempty"`    // Filter by capabilities: "pricing", "trading", "both"
+	Status        *string                `protobuf:"bytes,3,opt,name=status,proto3,oneof" json:"status,omitempty"`                // Filter by status: "active", "inactive"
+	Page          int32                  `protobuf:"varint,4,opt,name=page,proto3" json:"page,omitempty"`                         // Page number (default: 1)
+	PageSize      int32                  `protobuf:"varint,5,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"` // Page size (default: 50)
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListProvidersRequest) Reset() {
+	*x = ListProvidersRequest{}
+	mi := &file_marketdata_v1_marketdata_proto_msgTypes[25]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListProvidersRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListProvidersRequest) ProtoMessage() {}
+
+func (x *ListProvidersRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_marketdata_v1_marketdata_proto_msgTypes[25]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListProvidersRequest.ProtoReflect.Descriptor instead.
+func (*ListProvidersRequest) Descriptor() ([]byte, []int) {
+	return file_marketdata_v1_marketdata_proto_rawDescGZIP(), []int{25}
+}
+
+func (x *ListProvidersRequest) GetType() string {
+	if x != nil && x.Type != nil {
+		return *x.Type
+	}
+	return ""
+}
+
+func (x *ListProvidersRequest) GetCapabilities() string {
+	if x != nil && x.Capabilities != nil {
+		return *x.Capabilities
+	}
+	return ""
+}
+
+func (x *ListProvidersRequest) GetStatus() string {
+	if x != nil && x.Status != nil {
+		return *x.Status
+	}
+	return ""
+}
+
+func (x *ListProvidersRequest) GetPage() int32 {
+	if x != nil {
+		return x.Page
+	}
+	return 0
+}
+
+func (x *ListProvidersRequest) GetPageSize() int32 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
+}
+
+// ListProvidersResponse returns a list of providers
+type ListProvidersResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Providers     []*Provider            `protobuf:"bytes,1,rep,name=providers,proto3" json:"providers,omitempty"`                // List of providers
+	Total         int32                  `protobuf:"varint,2,opt,name=total,proto3" json:"total,omitempty"`                       // Total number of providers
+	Page          int32                  `protobuf:"varint,3,opt,name=page,proto3" json:"page,omitempty"`                         // Current page
+	PageSize      int32                  `protobuf:"varint,4,opt,name=page_size,json=pageSize,proto3" json:"page_size,omitempty"` // Page size
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListProvidersResponse) Reset() {
+	*x = ListProvidersResponse{}
+	mi := &file_marketdata_v1_marketdata_proto_msgTypes[26]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListProvidersResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListProvidersResponse) ProtoMessage() {}
+
+func (x *ListProvidersResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_marketdata_v1_marketdata_proto_msgTypes[26]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListProvidersResponse.ProtoReflect.Descriptor instead.
+func (*ListProvidersResponse) Descriptor() ([]byte, []int) {
+	return file_marketdata_v1_marketdata_proto_rawDescGZIP(), []int{26}
+}
+
+func (x *ListProvidersResponse) GetProviders() []*Provider {
+	if x != nil {
+		return x.Providers
+	}
+	return nil
+}
+
+func (x *ListProvidersResponse) GetTotal() int32 {
+	if x != nil {
+		return x.Total
+	}
+	return 0
+}
+
+func (x *ListProvidersResponse) GetPage() int32 {
+	if x != nil {
+		return x.Page
+	}
+	return 0
+}
+
+func (x *ListProvidersResponse) GetPageSize() int32 {
+	if x != nil {
+		return x.PageSize
+	}
+	return 0
+}
+
 var File_marketdata_v1_marketdata_proto protoreflect.FileDescriptor
 
 const file_marketdata_v1_marketdata_proto_rawDesc = "" +
@@ -1605,7 +1982,41 @@ const file_marketdata_v1_marketdata_proto_rawDesc = "" +
 	"\n" +
 	"asset_type\x18\f \x01(\tR\tassetType\"R\n" +
 	"\x15GetSymbolInfoResponse\x129\n" +
-	"\x06symbol\x18\x01 \x01(\v2!.marketdata.v1.SymbolInfoDetailedR\x06symbol2\xb1\a\n" +
+	"\x06symbol\x18\x01 \x01(\v2!.marketdata.v1.SymbolInfoDetailedR\x06symbol\"\xc7\x03\n" +
+	"\bProvider\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\rR\x02id\x12\x12\n" +
+	"\x04name\x18\x02 \x01(\tR\x04name\x12\x12\n" +
+	"\x04type\x18\x03 \x01(\tR\x04type\x12\x16\n" +
+	"\x06status\x18\x04 \x01(\tR\x06status\x12\"\n" +
+	"\fcapabilities\x18\x05 \x01(\tR\fcapabilities\x12\x1a\n" +
+	"\bmetadata\x18\x06 \x01(\tR\bmetadata\x12'\n" +
+	"\x0fconnection_mode\x18\a \x01(\tR\x0econnectionMode\x12\x1b\n" +
+	"\tis_active\x18\b \x01(\bR\bisActive\x12%\n" +
+	"\x0econnect_policy\x18\t \x01(\tR\rconnectPolicy\x122\n" +
+	"\x15heartbeat_timeout_sec\x18\n" +
+	" \x01(\x05R\x13heartbeatTimeoutSec\x12(\n" +
+	"\x10backoff_base_sec\x18\v \x01(\x05R\x0ebackoffBaseSec\x12&\n" +
+	"\x0fmax_backoff_sec\x18\f \x01(\x05R\rmaxBackoffSec\x128\n" +
+	"\x18resubscribe_on_reconnect\x18\r \x01(\bR\x16resubscribeOnReconnect\"5\n" +
+	"\x12GetProviderRequest\x12\x1f\n" +
+	"\vprovider_id\x18\x01 \x01(\rR\n" +
+	"providerId\"J\n" +
+	"\x13GetProviderResponse\x123\n" +
+	"\bprovider\x18\x01 \x01(\v2\x17.marketdata.v1.ProviderR\bprovider\"\xcb\x01\n" +
+	"\x14ListProvidersRequest\x12\x17\n" +
+	"\x04type\x18\x01 \x01(\tH\x00R\x04type\x88\x01\x01\x12'\n" +
+	"\fcapabilities\x18\x02 \x01(\tH\x01R\fcapabilities\x88\x01\x01\x12\x1b\n" +
+	"\x06status\x18\x03 \x01(\tH\x02R\x06status\x88\x01\x01\x12\x12\n" +
+	"\x04page\x18\x04 \x01(\x05R\x04page\x12\x1b\n" +
+	"\tpage_size\x18\x05 \x01(\x05R\bpageSizeB\a\n" +
+	"\x05_typeB\x0f\n" +
+	"\r_capabilitiesB\t\n" +
+	"\a_status\"\x95\x01\n" +
+	"\x15ListProvidersResponse\x125\n" +
+	"\tproviders\x18\x01 \x03(\v2\x17.marketdata.v1.ProviderR\tproviders\x12\x14\n" +
+	"\x05total\x18\x02 \x01(\x05R\x05total\x12\x12\n" +
+	"\x04page\x18\x03 \x01(\x05R\x04page\x12\x1b\n" +
+	"\tpage_size\x18\x04 \x01(\x05R\bpageSize2\xe3\b\n" +
 	"\n" +
 	"MarketData\x12W\n" +
 	"\fGetTopOfBook\x12\".marketdata.v1.GetTopOfBookRequest\x1a#.marketdata.v1.GetTopOfBookResponse\x12W\n" +
@@ -1617,7 +2028,9 @@ const file_marketdata_v1_marketdata_proto_rawDesc = "" +
 	"\x12GetTradingSessions\x12(.marketdata.v1.GetTradingSessionsRequest\x1a).marketdata.v1.GetTradingSessionsResponse\x12q\n" +
 	"\x14GetHistoricalCandles\x12*.marketdata.v1.GetHistoricalCandlesRequest\x1a+.marketdata.v1.GetHistoricalCandlesResponse0\x01\x12k\n" +
 	"\x12GetHistoricalTicks\x12(.marketdata.v1.GetHistoricalTicksRequest\x1a).marketdata.v1.GetHistoricalTicksResponse0\x01\x12Z\n" +
-	"\rGetSymbolInfo\x12#.marketdata.v1.GetSymbolInfoRequest\x1a$.marketdata.v1.GetSymbolInfoResponseBGZEgithub.com/ArcaTechCo/PipsendProtos/gen/go/marketdata/v1;marketdatav1b\x06proto3"
+	"\rGetSymbolInfo\x12#.marketdata.v1.GetSymbolInfoRequest\x1a$.marketdata.v1.GetSymbolInfoResponse\x12T\n" +
+	"\vGetProvider\x12!.marketdata.v1.GetProviderRequest\x1a\".marketdata.v1.GetProviderResponse\x12Z\n" +
+	"\rListProviders\x12#.marketdata.v1.ListProvidersRequest\x1a$.marketdata.v1.ListProvidersResponseBGZEgithub.com/ArcaTechCo/PipsendProtos/gen/go/marketdata/v1;marketdatav1b\x06proto3"
 
 var (
 	file_marketdata_v1_marketdata_proto_rawDescOnce sync.Once
@@ -1631,7 +2044,7 @@ func file_marketdata_v1_marketdata_proto_rawDescGZIP() []byte {
 	return file_marketdata_v1_marketdata_proto_rawDescData
 }
 
-var file_marketdata_v1_marketdata_proto_msgTypes = make([]protoimpl.MessageInfo, 22)
+var file_marketdata_v1_marketdata_proto_msgTypes = make([]protoimpl.MessageInfo, 27)
 var file_marketdata_v1_marketdata_proto_goTypes = []any{
 	(*GetTopOfBookRequest)(nil),          // 0: marketdata.v1.GetTopOfBookRequest
 	(*GetTopOfBookResponse)(nil),         // 1: marketdata.v1.GetTopOfBookResponse
@@ -1655,37 +2068,48 @@ var file_marketdata_v1_marketdata_proto_goTypes = []any{
 	(*GetSymbolInfoRequest)(nil),         // 19: marketdata.v1.GetSymbolInfoRequest
 	(*SymbolInfoDetailed)(nil),           // 20: marketdata.v1.SymbolInfoDetailed
 	(*GetSymbolInfoResponse)(nil),        // 21: marketdata.v1.GetSymbolInfoResponse
+	(*Provider)(nil),                     // 22: marketdata.v1.Provider
+	(*GetProviderRequest)(nil),           // 23: marketdata.v1.GetProviderRequest
+	(*GetProviderResponse)(nil),          // 24: marketdata.v1.GetProviderResponse
+	(*ListProvidersRequest)(nil),         // 25: marketdata.v1.ListProvidersRequest
+	(*ListProvidersResponse)(nil),        // 26: marketdata.v1.ListProvidersResponse
 }
 var file_marketdata_v1_marketdata_proto_depIdxs = []int32{
 	9,  // 0: marketdata.v1.GetSymbolResponse.symbol:type_name -> marketdata.v1.SymbolInfo
 	9,  // 1: marketdata.v1.ListSymbolsResponse.symbols:type_name -> marketdata.v1.SymbolInfo
 	13, // 2: marketdata.v1.GetTradingSessionsResponse.sessions:type_name -> marketdata.v1.TradingSession
 	20, // 3: marketdata.v1.GetSymbolInfoResponse.symbol:type_name -> marketdata.v1.SymbolInfoDetailed
-	0,  // 4: marketdata.v1.MarketData.GetTopOfBook:input_type -> marketdata.v1.GetTopOfBookRequest
-	2,  // 5: marketdata.v1.MarketData.GetMarkPrice:input_type -> marketdata.v1.GetMarkPriceRequest
-	4,  // 6: marketdata.v1.MarketData.Convert:input_type -> marketdata.v1.ConvertRequest
-	6,  // 7: marketdata.v1.MarketData.GetSymbol:input_type -> marketdata.v1.GetSymbolRequest
-	7,  // 8: marketdata.v1.MarketData.GetSymbolByCode:input_type -> marketdata.v1.GetSymbolByCodeRequest
-	8,  // 9: marketdata.v1.MarketData.ListSymbols:input_type -> marketdata.v1.ListSymbolsRequest
-	12, // 10: marketdata.v1.MarketData.GetTradingSessions:input_type -> marketdata.v1.GetTradingSessionsRequest
-	15, // 11: marketdata.v1.MarketData.GetHistoricalCandles:input_type -> marketdata.v1.GetHistoricalCandlesRequest
-	17, // 12: marketdata.v1.MarketData.GetHistoricalTicks:input_type -> marketdata.v1.GetHistoricalTicksRequest
-	19, // 13: marketdata.v1.MarketData.GetSymbolInfo:input_type -> marketdata.v1.GetSymbolInfoRequest
-	1,  // 14: marketdata.v1.MarketData.GetTopOfBook:output_type -> marketdata.v1.GetTopOfBookResponse
-	3,  // 15: marketdata.v1.MarketData.GetMarkPrice:output_type -> marketdata.v1.GetMarkPriceResponse
-	5,  // 16: marketdata.v1.MarketData.Convert:output_type -> marketdata.v1.ConvertResponse
-	10, // 17: marketdata.v1.MarketData.GetSymbol:output_type -> marketdata.v1.GetSymbolResponse
-	10, // 18: marketdata.v1.MarketData.GetSymbolByCode:output_type -> marketdata.v1.GetSymbolResponse
-	11, // 19: marketdata.v1.MarketData.ListSymbols:output_type -> marketdata.v1.ListSymbolsResponse
-	14, // 20: marketdata.v1.MarketData.GetTradingSessions:output_type -> marketdata.v1.GetTradingSessionsResponse
-	16, // 21: marketdata.v1.MarketData.GetHistoricalCandles:output_type -> marketdata.v1.GetHistoricalCandlesResponse
-	18, // 22: marketdata.v1.MarketData.GetHistoricalTicks:output_type -> marketdata.v1.GetHistoricalTicksResponse
-	21, // 23: marketdata.v1.MarketData.GetSymbolInfo:output_type -> marketdata.v1.GetSymbolInfoResponse
-	14, // [14:24] is the sub-list for method output_type
-	4,  // [4:14] is the sub-list for method input_type
-	4,  // [4:4] is the sub-list for extension type_name
-	4,  // [4:4] is the sub-list for extension extendee
-	0,  // [0:4] is the sub-list for field type_name
+	22, // 4: marketdata.v1.GetProviderResponse.provider:type_name -> marketdata.v1.Provider
+	22, // 5: marketdata.v1.ListProvidersResponse.providers:type_name -> marketdata.v1.Provider
+	0,  // 6: marketdata.v1.MarketData.GetTopOfBook:input_type -> marketdata.v1.GetTopOfBookRequest
+	2,  // 7: marketdata.v1.MarketData.GetMarkPrice:input_type -> marketdata.v1.GetMarkPriceRequest
+	4,  // 8: marketdata.v1.MarketData.Convert:input_type -> marketdata.v1.ConvertRequest
+	6,  // 9: marketdata.v1.MarketData.GetSymbol:input_type -> marketdata.v1.GetSymbolRequest
+	7,  // 10: marketdata.v1.MarketData.GetSymbolByCode:input_type -> marketdata.v1.GetSymbolByCodeRequest
+	8,  // 11: marketdata.v1.MarketData.ListSymbols:input_type -> marketdata.v1.ListSymbolsRequest
+	12, // 12: marketdata.v1.MarketData.GetTradingSessions:input_type -> marketdata.v1.GetTradingSessionsRequest
+	15, // 13: marketdata.v1.MarketData.GetHistoricalCandles:input_type -> marketdata.v1.GetHistoricalCandlesRequest
+	17, // 14: marketdata.v1.MarketData.GetHistoricalTicks:input_type -> marketdata.v1.GetHistoricalTicksRequest
+	19, // 15: marketdata.v1.MarketData.GetSymbolInfo:input_type -> marketdata.v1.GetSymbolInfoRequest
+	23, // 16: marketdata.v1.MarketData.GetProvider:input_type -> marketdata.v1.GetProviderRequest
+	25, // 17: marketdata.v1.MarketData.ListProviders:input_type -> marketdata.v1.ListProvidersRequest
+	1,  // 18: marketdata.v1.MarketData.GetTopOfBook:output_type -> marketdata.v1.GetTopOfBookResponse
+	3,  // 19: marketdata.v1.MarketData.GetMarkPrice:output_type -> marketdata.v1.GetMarkPriceResponse
+	5,  // 20: marketdata.v1.MarketData.Convert:output_type -> marketdata.v1.ConvertResponse
+	10, // 21: marketdata.v1.MarketData.GetSymbol:output_type -> marketdata.v1.GetSymbolResponse
+	10, // 22: marketdata.v1.MarketData.GetSymbolByCode:output_type -> marketdata.v1.GetSymbolResponse
+	11, // 23: marketdata.v1.MarketData.ListSymbols:output_type -> marketdata.v1.ListSymbolsResponse
+	14, // 24: marketdata.v1.MarketData.GetTradingSessions:output_type -> marketdata.v1.GetTradingSessionsResponse
+	16, // 25: marketdata.v1.MarketData.GetHistoricalCandles:output_type -> marketdata.v1.GetHistoricalCandlesResponse
+	18, // 26: marketdata.v1.MarketData.GetHistoricalTicks:output_type -> marketdata.v1.GetHistoricalTicksResponse
+	21, // 27: marketdata.v1.MarketData.GetSymbolInfo:output_type -> marketdata.v1.GetSymbolInfoResponse
+	24, // 28: marketdata.v1.MarketData.GetProvider:output_type -> marketdata.v1.GetProviderResponse
+	26, // 29: marketdata.v1.MarketData.ListProviders:output_type -> marketdata.v1.ListProvidersResponse
+	18, // [18:30] is the sub-list for method output_type
+	6,  // [6:18] is the sub-list for method input_type
+	6,  // [6:6] is the sub-list for extension type_name
+	6,  // [6:6] is the sub-list for extension extendee
+	0,  // [0:6] is the sub-list for field type_name
 }
 
 func init() { file_marketdata_v1_marketdata_proto_init() }
@@ -1693,13 +2117,14 @@ func file_marketdata_v1_marketdata_proto_init() {
 	if File_marketdata_v1_marketdata_proto != nil {
 		return
 	}
+	file_marketdata_v1_marketdata_proto_msgTypes[25].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_marketdata_v1_marketdata_proto_rawDesc), len(file_marketdata_v1_marketdata_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   22,
+			NumMessages:   27,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

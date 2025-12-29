@@ -1,24 +1,36 @@
-.PHONY: generate clean lint format install-tools check
+.PHONY: generate clean lint format install-tools check help
+
+help:
+	@echo "📚 PipsendProtos - Comandos Disponibles"
+	@echo ""
+	@echo "  make generate    - Generar código Go desde protos (usa Docker)"
+	@echo "  make lint        - Validar archivos proto (usa Docker)"
+	@echo "  make format      - Formatear archivos proto (usa Docker)"
+	@echo "  make clean       - Limpiar código generado"
+	@echo "  make check       - Verificar que todo esté correcto"
+	@echo ""
+	@echo "💡 Tip: Usa ./scripts/generate.sh para más detalles"
 
 install-tools:
-	@echo "Installing buf..."
-	go install github.com/bufbuild/buf/cmd/buf@latest
+	@echo "⚠️  No es necesario instalar buf localmente"
+	@echo "✅ Usa 'make generate' que ejecuta buf en Docker"
 
 generate:
-	@echo "Generating Go code from proto files..."
-	buf generate
+	@echo "🔧 Generando código Go desde proto files..."
+	@./scripts/generate.sh
 
 clean:
-	@echo "Cleaning generated code..."
+	@echo "🧹 Limpiando código generado..."
 	rm -rf gen/go/*
+	@echo "✅ Código generado eliminado"
 
 lint:
-	@echo "Linting proto files..."
-	buf lint
+	@echo "🔍 Validando proto files..."
+	@./scripts/lint.sh
 
 format:
-	@echo "Formatting proto files..."
-	buf format -w
+	@echo "✨ Formateando proto files..."
+	@./scripts/format.sh
 
 breaking:
 	@echo "Checking for breaking changes..."
