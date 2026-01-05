@@ -104,6 +104,14 @@ message ListSymbolsRequest {
   bool active_only = 1; // true = only active symbols, false = all symbols
 }
 
+// MarketRouteInfo represents a routing configuration for a symbol to a specific provider
+message MarketRouteInfo {
+  uint32 provider_id = 1;   // Provider ID (e.g., 3 for PrimeXM)
+  string symbol_code = 2;   // Provider-specific symbol code (e.g., "BTCUSD.i", "XAUUSD.i")
+  int32 priority = 3;       // Route priority (lower number = higher priority)
+  bool is_active = 4;       // Whether this route is active
+}
+
 // SymbolInfo contains complete symbol configuration
 message SymbolInfo {
   int64 id = 1;                   // Symbol ID
@@ -120,6 +128,7 @@ message SymbolInfo {
   string base_currency = 12;      // Base currency: "ETH", "BTC"
   bool is_active = 13;            // Whether the symbol is active
   string point_value = 14;        // Point value: "10.00" (value per point movement)
+  MarketRouteInfo market_route = 15;  // Market route to provider (null if no route exists)
 }
 
 // GetSymbolResponse returns a single symbol

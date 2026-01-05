@@ -554,6 +554,75 @@ func (x *ListSymbolsRequest) GetActiveOnly() bool {
 	return false
 }
 
+// MarketRouteInfo represents a routing configuration for a symbol to a specific provider
+type MarketRouteInfo struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	ProviderId    uint32                 `protobuf:"varint,1,opt,name=provider_id,json=providerId,proto3" json:"provider_id,omitempty"` // Provider ID (e.g., 3 for PrimeXM)
+	SymbolCode    string                 `protobuf:"bytes,2,opt,name=symbol_code,json=symbolCode,proto3" json:"symbol_code,omitempty"`  // Provider-specific symbol code (e.g., "BTCUSD.i", "XAUUSD.i")
+	Priority      int32                  `protobuf:"varint,3,opt,name=priority,proto3" json:"priority,omitempty"`                       // Route priority (lower number = higher priority)
+	IsActive      bool                   `protobuf:"varint,4,opt,name=is_active,json=isActive,proto3" json:"is_active,omitempty"`       // Whether this route is active
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *MarketRouteInfo) Reset() {
+	*x = MarketRouteInfo{}
+	mi := &file_marketdata_v1_marketdata_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *MarketRouteInfo) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*MarketRouteInfo) ProtoMessage() {}
+
+func (x *MarketRouteInfo) ProtoReflect() protoreflect.Message {
+	mi := &file_marketdata_v1_marketdata_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use MarketRouteInfo.ProtoReflect.Descriptor instead.
+func (*MarketRouteInfo) Descriptor() ([]byte, []int) {
+	return file_marketdata_v1_marketdata_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *MarketRouteInfo) GetProviderId() uint32 {
+	if x != nil {
+		return x.ProviderId
+	}
+	return 0
+}
+
+func (x *MarketRouteInfo) GetSymbolCode() string {
+	if x != nil {
+		return x.SymbolCode
+	}
+	return ""
+}
+
+func (x *MarketRouteInfo) GetPriority() int32 {
+	if x != nil {
+		return x.Priority
+	}
+	return 0
+}
+
+func (x *MarketRouteInfo) GetIsActive() bool {
+	if x != nil {
+		return x.IsActive
+	}
+	return false
+}
+
 // SymbolInfo contains complete symbol configuration
 type SymbolInfo struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
@@ -571,13 +640,14 @@ type SymbolInfo struct {
 	BaseCurrency   string                 `protobuf:"bytes,12,opt,name=base_currency,json=baseCurrency,proto3" json:"base_currency,omitempty"`       // Base currency: "ETH", "BTC"
 	IsActive       bool                   `protobuf:"varint,13,opt,name=is_active,json=isActive,proto3" json:"is_active,omitempty"`                  // Whether the symbol is active
 	PointValue     string                 `protobuf:"bytes,14,opt,name=point_value,json=pointValue,proto3" json:"point_value,omitempty"`             // Point value: "10.00" (value per point movement)
+	MarketRoute    *MarketRouteInfo       `protobuf:"bytes,15,opt,name=market_route,json=marketRoute,proto3" json:"market_route,omitempty"`          // Market route to provider (null if no route exists)
 	unknownFields  protoimpl.UnknownFields
 	sizeCache      protoimpl.SizeCache
 }
 
 func (x *SymbolInfo) Reset() {
 	*x = SymbolInfo{}
-	mi := &file_marketdata_v1_marketdata_proto_msgTypes[9]
+	mi := &file_marketdata_v1_marketdata_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -589,7 +659,7 @@ func (x *SymbolInfo) String() string {
 func (*SymbolInfo) ProtoMessage() {}
 
 func (x *SymbolInfo) ProtoReflect() protoreflect.Message {
-	mi := &file_marketdata_v1_marketdata_proto_msgTypes[9]
+	mi := &file_marketdata_v1_marketdata_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -602,7 +672,7 @@ func (x *SymbolInfo) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SymbolInfo.ProtoReflect.Descriptor instead.
 func (*SymbolInfo) Descriptor() ([]byte, []int) {
-	return file_marketdata_v1_marketdata_proto_rawDescGZIP(), []int{9}
+	return file_marketdata_v1_marketdata_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *SymbolInfo) GetId() int64 {
@@ -703,6 +773,13 @@ func (x *SymbolInfo) GetPointValue() string {
 	return ""
 }
 
+func (x *SymbolInfo) GetMarketRoute() *MarketRouteInfo {
+	if x != nil {
+		return x.MarketRoute
+	}
+	return nil
+}
+
 // GetSymbolResponse returns a single symbol
 type GetSymbolResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
@@ -713,7 +790,7 @@ type GetSymbolResponse struct {
 
 func (x *GetSymbolResponse) Reset() {
 	*x = GetSymbolResponse{}
-	mi := &file_marketdata_v1_marketdata_proto_msgTypes[10]
+	mi := &file_marketdata_v1_marketdata_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -725,7 +802,7 @@ func (x *GetSymbolResponse) String() string {
 func (*GetSymbolResponse) ProtoMessage() {}
 
 func (x *GetSymbolResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_marketdata_v1_marketdata_proto_msgTypes[10]
+	mi := &file_marketdata_v1_marketdata_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -738,7 +815,7 @@ func (x *GetSymbolResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetSymbolResponse.ProtoReflect.Descriptor instead.
 func (*GetSymbolResponse) Descriptor() ([]byte, []int) {
-	return file_marketdata_v1_marketdata_proto_rawDescGZIP(), []int{10}
+	return file_marketdata_v1_marketdata_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *GetSymbolResponse) GetSymbol() *SymbolInfo {
@@ -758,7 +835,7 @@ type ListSymbolsResponse struct {
 
 func (x *ListSymbolsResponse) Reset() {
 	*x = ListSymbolsResponse{}
-	mi := &file_marketdata_v1_marketdata_proto_msgTypes[11]
+	mi := &file_marketdata_v1_marketdata_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -770,7 +847,7 @@ func (x *ListSymbolsResponse) String() string {
 func (*ListSymbolsResponse) ProtoMessage() {}
 
 func (x *ListSymbolsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_marketdata_v1_marketdata_proto_msgTypes[11]
+	mi := &file_marketdata_v1_marketdata_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -783,7 +860,7 @@ func (x *ListSymbolsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListSymbolsResponse.ProtoReflect.Descriptor instead.
 func (*ListSymbolsResponse) Descriptor() ([]byte, []int) {
-	return file_marketdata_v1_marketdata_proto_rawDescGZIP(), []int{11}
+	return file_marketdata_v1_marketdata_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *ListSymbolsResponse) GetSymbols() []*SymbolInfo {
@@ -803,7 +880,7 @@ type GetTradingSessionsRequest struct {
 
 func (x *GetTradingSessionsRequest) Reset() {
 	*x = GetTradingSessionsRequest{}
-	mi := &file_marketdata_v1_marketdata_proto_msgTypes[12]
+	mi := &file_marketdata_v1_marketdata_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -815,7 +892,7 @@ func (x *GetTradingSessionsRequest) String() string {
 func (*GetTradingSessionsRequest) ProtoMessage() {}
 
 func (x *GetTradingSessionsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_marketdata_v1_marketdata_proto_msgTypes[12]
+	mi := &file_marketdata_v1_marketdata_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -828,7 +905,7 @@ func (x *GetTradingSessionsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetTradingSessionsRequest.ProtoReflect.Descriptor instead.
 func (*GetTradingSessionsRequest) Descriptor() ([]byte, []int) {
-	return file_marketdata_v1_marketdata_proto_rawDescGZIP(), []int{12}
+	return file_marketdata_v1_marketdata_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *GetTradingSessionsRequest) GetSymbolId() int64 {
@@ -851,7 +928,7 @@ type TradingSession struct {
 
 func (x *TradingSession) Reset() {
 	*x = TradingSession{}
-	mi := &file_marketdata_v1_marketdata_proto_msgTypes[13]
+	mi := &file_marketdata_v1_marketdata_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -863,7 +940,7 @@ func (x *TradingSession) String() string {
 func (*TradingSession) ProtoMessage() {}
 
 func (x *TradingSession) ProtoReflect() protoreflect.Message {
-	mi := &file_marketdata_v1_marketdata_proto_msgTypes[13]
+	mi := &file_marketdata_v1_marketdata_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -876,7 +953,7 @@ func (x *TradingSession) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TradingSession.ProtoReflect.Descriptor instead.
 func (*TradingSession) Descriptor() ([]byte, []int) {
-	return file_marketdata_v1_marketdata_proto_rawDescGZIP(), []int{13}
+	return file_marketdata_v1_marketdata_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *TradingSession) GetDayOfWeek() int32 {
@@ -921,7 +998,7 @@ type GetTradingSessionsResponse struct {
 
 func (x *GetTradingSessionsResponse) Reset() {
 	*x = GetTradingSessionsResponse{}
-	mi := &file_marketdata_v1_marketdata_proto_msgTypes[14]
+	mi := &file_marketdata_v1_marketdata_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -933,7 +1010,7 @@ func (x *GetTradingSessionsResponse) String() string {
 func (*GetTradingSessionsResponse) ProtoMessage() {}
 
 func (x *GetTradingSessionsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_marketdata_v1_marketdata_proto_msgTypes[14]
+	mi := &file_marketdata_v1_marketdata_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -946,7 +1023,7 @@ func (x *GetTradingSessionsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetTradingSessionsResponse.ProtoReflect.Descriptor instead.
 func (*GetTradingSessionsResponse) Descriptor() ([]byte, []int) {
-	return file_marketdata_v1_marketdata_proto_rawDescGZIP(), []int{14}
+	return file_marketdata_v1_marketdata_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *GetTradingSessionsResponse) GetIs_24_7() bool {
@@ -997,7 +1074,7 @@ type GetHistoricalCandlesRequest struct {
 
 func (x *GetHistoricalCandlesRequest) Reset() {
 	*x = GetHistoricalCandlesRequest{}
-	mi := &file_marketdata_v1_marketdata_proto_msgTypes[15]
+	mi := &file_marketdata_v1_marketdata_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1009,7 +1086,7 @@ func (x *GetHistoricalCandlesRequest) String() string {
 func (*GetHistoricalCandlesRequest) ProtoMessage() {}
 
 func (x *GetHistoricalCandlesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_marketdata_v1_marketdata_proto_msgTypes[15]
+	mi := &file_marketdata_v1_marketdata_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1022,7 +1099,7 @@ func (x *GetHistoricalCandlesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetHistoricalCandlesRequest.ProtoReflect.Descriptor instead.
 func (*GetHistoricalCandlesRequest) Descriptor() ([]byte, []int) {
-	return file_marketdata_v1_marketdata_proto_rawDescGZIP(), []int{15}
+	return file_marketdata_v1_marketdata_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *GetHistoricalCandlesRequest) GetSymbolId() int64 {
@@ -1068,7 +1145,7 @@ type GetHistoricalCandlesResponse struct {
 
 func (x *GetHistoricalCandlesResponse) Reset() {
 	*x = GetHistoricalCandlesResponse{}
-	mi := &file_marketdata_v1_marketdata_proto_msgTypes[16]
+	mi := &file_marketdata_v1_marketdata_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1080,7 +1157,7 @@ func (x *GetHistoricalCandlesResponse) String() string {
 func (*GetHistoricalCandlesResponse) ProtoMessage() {}
 
 func (x *GetHistoricalCandlesResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_marketdata_v1_marketdata_proto_msgTypes[16]
+	mi := &file_marketdata_v1_marketdata_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1093,7 +1170,7 @@ func (x *GetHistoricalCandlesResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetHistoricalCandlesResponse.ProtoReflect.Descriptor instead.
 func (*GetHistoricalCandlesResponse) Descriptor() ([]byte, []int) {
-	return file_marketdata_v1_marketdata_proto_rawDescGZIP(), []int{16}
+	return file_marketdata_v1_marketdata_proto_rawDescGZIP(), []int{17}
 }
 
 func (x *GetHistoricalCandlesResponse) GetTime() int64 {
@@ -1150,7 +1227,7 @@ type GetHistoricalTicksRequest struct {
 
 func (x *GetHistoricalTicksRequest) Reset() {
 	*x = GetHistoricalTicksRequest{}
-	mi := &file_marketdata_v1_marketdata_proto_msgTypes[17]
+	mi := &file_marketdata_v1_marketdata_proto_msgTypes[18]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1162,7 +1239,7 @@ func (x *GetHistoricalTicksRequest) String() string {
 func (*GetHistoricalTicksRequest) ProtoMessage() {}
 
 func (x *GetHistoricalTicksRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_marketdata_v1_marketdata_proto_msgTypes[17]
+	mi := &file_marketdata_v1_marketdata_proto_msgTypes[18]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1175,7 +1252,7 @@ func (x *GetHistoricalTicksRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetHistoricalTicksRequest.ProtoReflect.Descriptor instead.
 func (*GetHistoricalTicksRequest) Descriptor() ([]byte, []int) {
-	return file_marketdata_v1_marketdata_proto_rawDescGZIP(), []int{17}
+	return file_marketdata_v1_marketdata_proto_rawDescGZIP(), []int{18}
 }
 
 func (x *GetHistoricalTicksRequest) GetSymbolId() int64 {
@@ -1211,7 +1288,7 @@ type GetHistoricalTicksResponse struct {
 
 func (x *GetHistoricalTicksResponse) Reset() {
 	*x = GetHistoricalTicksResponse{}
-	mi := &file_marketdata_v1_marketdata_proto_msgTypes[18]
+	mi := &file_marketdata_v1_marketdata_proto_msgTypes[19]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1223,7 +1300,7 @@ func (x *GetHistoricalTicksResponse) String() string {
 func (*GetHistoricalTicksResponse) ProtoMessage() {}
 
 func (x *GetHistoricalTicksResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_marketdata_v1_marketdata_proto_msgTypes[18]
+	mi := &file_marketdata_v1_marketdata_proto_msgTypes[19]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1236,7 +1313,7 @@ func (x *GetHistoricalTicksResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetHistoricalTicksResponse.ProtoReflect.Descriptor instead.
 func (*GetHistoricalTicksResponse) Descriptor() ([]byte, []int) {
-	return file_marketdata_v1_marketdata_proto_rawDescGZIP(), []int{18}
+	return file_marketdata_v1_marketdata_proto_rawDescGZIP(), []int{19}
 }
 
 func (x *GetHistoricalTicksResponse) GetTime() int64 {
@@ -1270,7 +1347,7 @@ type GetSymbolInfoRequest struct {
 
 func (x *GetSymbolInfoRequest) Reset() {
 	*x = GetSymbolInfoRequest{}
-	mi := &file_marketdata_v1_marketdata_proto_msgTypes[19]
+	mi := &file_marketdata_v1_marketdata_proto_msgTypes[20]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1282,7 +1359,7 @@ func (x *GetSymbolInfoRequest) String() string {
 func (*GetSymbolInfoRequest) ProtoMessage() {}
 
 func (x *GetSymbolInfoRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_marketdata_v1_marketdata_proto_msgTypes[19]
+	mi := &file_marketdata_v1_marketdata_proto_msgTypes[20]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1295,7 +1372,7 @@ func (x *GetSymbolInfoRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetSymbolInfoRequest.ProtoReflect.Descriptor instead.
 func (*GetSymbolInfoRequest) Descriptor() ([]byte, []int) {
-	return file_marketdata_v1_marketdata_proto_rawDescGZIP(), []int{19}
+	return file_marketdata_v1_marketdata_proto_rawDescGZIP(), []int{20}
 }
 
 func (x *GetSymbolInfoRequest) GetSymbolId() int64 {
@@ -1326,7 +1403,7 @@ type SymbolInfoDetailed struct {
 
 func (x *SymbolInfoDetailed) Reset() {
 	*x = SymbolInfoDetailed{}
-	mi := &file_marketdata_v1_marketdata_proto_msgTypes[20]
+	mi := &file_marketdata_v1_marketdata_proto_msgTypes[21]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1338,7 +1415,7 @@ func (x *SymbolInfoDetailed) String() string {
 func (*SymbolInfoDetailed) ProtoMessage() {}
 
 func (x *SymbolInfoDetailed) ProtoReflect() protoreflect.Message {
-	mi := &file_marketdata_v1_marketdata_proto_msgTypes[20]
+	mi := &file_marketdata_v1_marketdata_proto_msgTypes[21]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1351,7 +1428,7 @@ func (x *SymbolInfoDetailed) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SymbolInfoDetailed.ProtoReflect.Descriptor instead.
 func (*SymbolInfoDetailed) Descriptor() ([]byte, []int) {
-	return file_marketdata_v1_marketdata_proto_rawDescGZIP(), []int{20}
+	return file_marketdata_v1_marketdata_proto_rawDescGZIP(), []int{21}
 }
 
 func (x *SymbolInfoDetailed) GetSymbolId() int64 {
@@ -1448,7 +1525,7 @@ type GetSymbolInfoResponse struct {
 
 func (x *GetSymbolInfoResponse) Reset() {
 	*x = GetSymbolInfoResponse{}
-	mi := &file_marketdata_v1_marketdata_proto_msgTypes[21]
+	mi := &file_marketdata_v1_marketdata_proto_msgTypes[22]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1460,7 +1537,7 @@ func (x *GetSymbolInfoResponse) String() string {
 func (*GetSymbolInfoResponse) ProtoMessage() {}
 
 func (x *GetSymbolInfoResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_marketdata_v1_marketdata_proto_msgTypes[21]
+	mi := &file_marketdata_v1_marketdata_proto_msgTypes[22]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1473,7 +1550,7 @@ func (x *GetSymbolInfoResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetSymbolInfoResponse.ProtoReflect.Descriptor instead.
 func (*GetSymbolInfoResponse) Descriptor() ([]byte, []int) {
-	return file_marketdata_v1_marketdata_proto_rawDescGZIP(), []int{21}
+	return file_marketdata_v1_marketdata_proto_rawDescGZIP(), []int{22}
 }
 
 func (x *GetSymbolInfoResponse) GetSymbol() *SymbolInfoDetailed {
@@ -1505,7 +1582,7 @@ type Provider struct {
 
 func (x *Provider) Reset() {
 	*x = Provider{}
-	mi := &file_marketdata_v1_marketdata_proto_msgTypes[22]
+	mi := &file_marketdata_v1_marketdata_proto_msgTypes[23]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1517,7 +1594,7 @@ func (x *Provider) String() string {
 func (*Provider) ProtoMessage() {}
 
 func (x *Provider) ProtoReflect() protoreflect.Message {
-	mi := &file_marketdata_v1_marketdata_proto_msgTypes[22]
+	mi := &file_marketdata_v1_marketdata_proto_msgTypes[23]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1530,7 +1607,7 @@ func (x *Provider) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Provider.ProtoReflect.Descriptor instead.
 func (*Provider) Descriptor() ([]byte, []int) {
-	return file_marketdata_v1_marketdata_proto_rawDescGZIP(), []int{22}
+	return file_marketdata_v1_marketdata_proto_rawDescGZIP(), []int{23}
 }
 
 func (x *Provider) GetId() uint32 {
@@ -1634,7 +1711,7 @@ type GetProviderRequest struct {
 
 func (x *GetProviderRequest) Reset() {
 	*x = GetProviderRequest{}
-	mi := &file_marketdata_v1_marketdata_proto_msgTypes[23]
+	mi := &file_marketdata_v1_marketdata_proto_msgTypes[24]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1646,7 +1723,7 @@ func (x *GetProviderRequest) String() string {
 func (*GetProviderRequest) ProtoMessage() {}
 
 func (x *GetProviderRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_marketdata_v1_marketdata_proto_msgTypes[23]
+	mi := &file_marketdata_v1_marketdata_proto_msgTypes[24]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1659,7 +1736,7 @@ func (x *GetProviderRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetProviderRequest.ProtoReflect.Descriptor instead.
 func (*GetProviderRequest) Descriptor() ([]byte, []int) {
-	return file_marketdata_v1_marketdata_proto_rawDescGZIP(), []int{23}
+	return file_marketdata_v1_marketdata_proto_rawDescGZIP(), []int{24}
 }
 
 func (x *GetProviderRequest) GetProviderId() uint32 {
@@ -1679,7 +1756,7 @@ type GetProviderResponse struct {
 
 func (x *GetProviderResponse) Reset() {
 	*x = GetProviderResponse{}
-	mi := &file_marketdata_v1_marketdata_proto_msgTypes[24]
+	mi := &file_marketdata_v1_marketdata_proto_msgTypes[25]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1691,7 +1768,7 @@ func (x *GetProviderResponse) String() string {
 func (*GetProviderResponse) ProtoMessage() {}
 
 func (x *GetProviderResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_marketdata_v1_marketdata_proto_msgTypes[24]
+	mi := &file_marketdata_v1_marketdata_proto_msgTypes[25]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1704,7 +1781,7 @@ func (x *GetProviderResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetProviderResponse.ProtoReflect.Descriptor instead.
 func (*GetProviderResponse) Descriptor() ([]byte, []int) {
-	return file_marketdata_v1_marketdata_proto_rawDescGZIP(), []int{24}
+	return file_marketdata_v1_marketdata_proto_rawDescGZIP(), []int{25}
 }
 
 func (x *GetProviderResponse) GetProvider() *Provider {
@@ -1728,7 +1805,7 @@ type ListProvidersRequest struct {
 
 func (x *ListProvidersRequest) Reset() {
 	*x = ListProvidersRequest{}
-	mi := &file_marketdata_v1_marketdata_proto_msgTypes[25]
+	mi := &file_marketdata_v1_marketdata_proto_msgTypes[26]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1740,7 +1817,7 @@ func (x *ListProvidersRequest) String() string {
 func (*ListProvidersRequest) ProtoMessage() {}
 
 func (x *ListProvidersRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_marketdata_v1_marketdata_proto_msgTypes[25]
+	mi := &file_marketdata_v1_marketdata_proto_msgTypes[26]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1753,7 +1830,7 @@ func (x *ListProvidersRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListProvidersRequest.ProtoReflect.Descriptor instead.
 func (*ListProvidersRequest) Descriptor() ([]byte, []int) {
-	return file_marketdata_v1_marketdata_proto_rawDescGZIP(), []int{25}
+	return file_marketdata_v1_marketdata_proto_rawDescGZIP(), []int{26}
 }
 
 func (x *ListProvidersRequest) GetType() string {
@@ -1804,7 +1881,7 @@ type ListProvidersResponse struct {
 
 func (x *ListProvidersResponse) Reset() {
 	*x = ListProvidersResponse{}
-	mi := &file_marketdata_v1_marketdata_proto_msgTypes[26]
+	mi := &file_marketdata_v1_marketdata_proto_msgTypes[27]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1816,7 +1893,7 @@ func (x *ListProvidersResponse) String() string {
 func (*ListProvidersResponse) ProtoMessage() {}
 
 func (x *ListProvidersResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_marketdata_v1_marketdata_proto_msgTypes[26]
+	mi := &file_marketdata_v1_marketdata_proto_msgTypes[27]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1829,7 +1906,7 @@ func (x *ListProvidersResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListProvidersResponse.ProtoReflect.Descriptor instead.
 func (*ListProvidersResponse) Descriptor() ([]byte, []int) {
-	return file_marketdata_v1_marketdata_proto_rawDescGZIP(), []int{26}
+	return file_marketdata_v1_marketdata_proto_rawDescGZIP(), []int{27}
 }
 
 func (x *ListProvidersResponse) GetProviders() []*Provider {
@@ -1903,7 +1980,14 @@ const file_marketdata_v1_marketdata_proto_rawDesc = "" +
 	"\x04code\x18\x01 \x01(\tR\x04code\"5\n" +
 	"\x12ListSymbolsRequest\x12\x1f\n" +
 	"\vactive_only\x18\x01 \x01(\bR\n" +
-	"activeOnly\"\xbe\x03\n" +
+	"activeOnly\"\x8c\x01\n" +
+	"\x0fMarketRouteInfo\x12\x1f\n" +
+	"\vprovider_id\x18\x01 \x01(\rR\n" +
+	"providerId\x12\x1f\n" +
+	"\vsymbol_code\x18\x02 \x01(\tR\n" +
+	"symbolCode\x12\x1a\n" +
+	"\bpriority\x18\x03 \x01(\x05R\bpriority\x12\x1b\n" +
+	"\tis_active\x18\x04 \x01(\bR\bisActive\"\x81\x04\n" +
 	"\n" +
 	"SymbolInfo\x12\x0e\n" +
 	"\x02id\x18\x01 \x01(\x03R\x02id\x12\x12\n" +
@@ -1922,7 +2006,8 @@ const file_marketdata_v1_marketdata_proto_rawDesc = "" +
 	"\rbase_currency\x18\f \x01(\tR\fbaseCurrency\x12\x1b\n" +
 	"\tis_active\x18\r \x01(\bR\bisActive\x12\x1f\n" +
 	"\vpoint_value\x18\x0e \x01(\tR\n" +
-	"pointValue\"F\n" +
+	"pointValue\x12A\n" +
+	"\fmarket_route\x18\x0f \x01(\v2\x1e.marketdata.v1.MarketRouteInfoR\vmarketRoute\"F\n" +
 	"\x11GetSymbolResponse\x121\n" +
 	"\x06symbol\x18\x01 \x01(\v2\x19.marketdata.v1.SymbolInfoR\x06symbol\"J\n" +
 	"\x13ListSymbolsResponse\x123\n" +
@@ -2044,7 +2129,7 @@ func file_marketdata_v1_marketdata_proto_rawDescGZIP() []byte {
 	return file_marketdata_v1_marketdata_proto_rawDescData
 }
 
-var file_marketdata_v1_marketdata_proto_msgTypes = make([]protoimpl.MessageInfo, 27)
+var file_marketdata_v1_marketdata_proto_msgTypes = make([]protoimpl.MessageInfo, 28)
 var file_marketdata_v1_marketdata_proto_goTypes = []any{
 	(*GetTopOfBookRequest)(nil),          // 0: marketdata.v1.GetTopOfBookRequest
 	(*GetTopOfBookResponse)(nil),         // 1: marketdata.v1.GetTopOfBookResponse
@@ -2055,61 +2140,63 @@ var file_marketdata_v1_marketdata_proto_goTypes = []any{
 	(*GetSymbolRequest)(nil),             // 6: marketdata.v1.GetSymbolRequest
 	(*GetSymbolByCodeRequest)(nil),       // 7: marketdata.v1.GetSymbolByCodeRequest
 	(*ListSymbolsRequest)(nil),           // 8: marketdata.v1.ListSymbolsRequest
-	(*SymbolInfo)(nil),                   // 9: marketdata.v1.SymbolInfo
-	(*GetSymbolResponse)(nil),            // 10: marketdata.v1.GetSymbolResponse
-	(*ListSymbolsResponse)(nil),          // 11: marketdata.v1.ListSymbolsResponse
-	(*GetTradingSessionsRequest)(nil),    // 12: marketdata.v1.GetTradingSessionsRequest
-	(*TradingSession)(nil),               // 13: marketdata.v1.TradingSession
-	(*GetTradingSessionsResponse)(nil),   // 14: marketdata.v1.GetTradingSessionsResponse
-	(*GetHistoricalCandlesRequest)(nil),  // 15: marketdata.v1.GetHistoricalCandlesRequest
-	(*GetHistoricalCandlesResponse)(nil), // 16: marketdata.v1.GetHistoricalCandlesResponse
-	(*GetHistoricalTicksRequest)(nil),    // 17: marketdata.v1.GetHistoricalTicksRequest
-	(*GetHistoricalTicksResponse)(nil),   // 18: marketdata.v1.GetHistoricalTicksResponse
-	(*GetSymbolInfoRequest)(nil),         // 19: marketdata.v1.GetSymbolInfoRequest
-	(*SymbolInfoDetailed)(nil),           // 20: marketdata.v1.SymbolInfoDetailed
-	(*GetSymbolInfoResponse)(nil),        // 21: marketdata.v1.GetSymbolInfoResponse
-	(*Provider)(nil),                     // 22: marketdata.v1.Provider
-	(*GetProviderRequest)(nil),           // 23: marketdata.v1.GetProviderRequest
-	(*GetProviderResponse)(nil),          // 24: marketdata.v1.GetProviderResponse
-	(*ListProvidersRequest)(nil),         // 25: marketdata.v1.ListProvidersRequest
-	(*ListProvidersResponse)(nil),        // 26: marketdata.v1.ListProvidersResponse
+	(*MarketRouteInfo)(nil),              // 9: marketdata.v1.MarketRouteInfo
+	(*SymbolInfo)(nil),                   // 10: marketdata.v1.SymbolInfo
+	(*GetSymbolResponse)(nil),            // 11: marketdata.v1.GetSymbolResponse
+	(*ListSymbolsResponse)(nil),          // 12: marketdata.v1.ListSymbolsResponse
+	(*GetTradingSessionsRequest)(nil),    // 13: marketdata.v1.GetTradingSessionsRequest
+	(*TradingSession)(nil),               // 14: marketdata.v1.TradingSession
+	(*GetTradingSessionsResponse)(nil),   // 15: marketdata.v1.GetTradingSessionsResponse
+	(*GetHistoricalCandlesRequest)(nil),  // 16: marketdata.v1.GetHistoricalCandlesRequest
+	(*GetHistoricalCandlesResponse)(nil), // 17: marketdata.v1.GetHistoricalCandlesResponse
+	(*GetHistoricalTicksRequest)(nil),    // 18: marketdata.v1.GetHistoricalTicksRequest
+	(*GetHistoricalTicksResponse)(nil),   // 19: marketdata.v1.GetHistoricalTicksResponse
+	(*GetSymbolInfoRequest)(nil),         // 20: marketdata.v1.GetSymbolInfoRequest
+	(*SymbolInfoDetailed)(nil),           // 21: marketdata.v1.SymbolInfoDetailed
+	(*GetSymbolInfoResponse)(nil),        // 22: marketdata.v1.GetSymbolInfoResponse
+	(*Provider)(nil),                     // 23: marketdata.v1.Provider
+	(*GetProviderRequest)(nil),           // 24: marketdata.v1.GetProviderRequest
+	(*GetProviderResponse)(nil),          // 25: marketdata.v1.GetProviderResponse
+	(*ListProvidersRequest)(nil),         // 26: marketdata.v1.ListProvidersRequest
+	(*ListProvidersResponse)(nil),        // 27: marketdata.v1.ListProvidersResponse
 }
 var file_marketdata_v1_marketdata_proto_depIdxs = []int32{
-	9,  // 0: marketdata.v1.GetSymbolResponse.symbol:type_name -> marketdata.v1.SymbolInfo
-	9,  // 1: marketdata.v1.ListSymbolsResponse.symbols:type_name -> marketdata.v1.SymbolInfo
-	13, // 2: marketdata.v1.GetTradingSessionsResponse.sessions:type_name -> marketdata.v1.TradingSession
-	20, // 3: marketdata.v1.GetSymbolInfoResponse.symbol:type_name -> marketdata.v1.SymbolInfoDetailed
-	22, // 4: marketdata.v1.GetProviderResponse.provider:type_name -> marketdata.v1.Provider
-	22, // 5: marketdata.v1.ListProvidersResponse.providers:type_name -> marketdata.v1.Provider
-	0,  // 6: marketdata.v1.MarketData.GetTopOfBook:input_type -> marketdata.v1.GetTopOfBookRequest
-	2,  // 7: marketdata.v1.MarketData.GetMarkPrice:input_type -> marketdata.v1.GetMarkPriceRequest
-	4,  // 8: marketdata.v1.MarketData.Convert:input_type -> marketdata.v1.ConvertRequest
-	6,  // 9: marketdata.v1.MarketData.GetSymbol:input_type -> marketdata.v1.GetSymbolRequest
-	7,  // 10: marketdata.v1.MarketData.GetSymbolByCode:input_type -> marketdata.v1.GetSymbolByCodeRequest
-	8,  // 11: marketdata.v1.MarketData.ListSymbols:input_type -> marketdata.v1.ListSymbolsRequest
-	12, // 12: marketdata.v1.MarketData.GetTradingSessions:input_type -> marketdata.v1.GetTradingSessionsRequest
-	15, // 13: marketdata.v1.MarketData.GetHistoricalCandles:input_type -> marketdata.v1.GetHistoricalCandlesRequest
-	17, // 14: marketdata.v1.MarketData.GetHistoricalTicks:input_type -> marketdata.v1.GetHistoricalTicksRequest
-	19, // 15: marketdata.v1.MarketData.GetSymbolInfo:input_type -> marketdata.v1.GetSymbolInfoRequest
-	23, // 16: marketdata.v1.MarketData.GetProvider:input_type -> marketdata.v1.GetProviderRequest
-	25, // 17: marketdata.v1.MarketData.ListProviders:input_type -> marketdata.v1.ListProvidersRequest
-	1,  // 18: marketdata.v1.MarketData.GetTopOfBook:output_type -> marketdata.v1.GetTopOfBookResponse
-	3,  // 19: marketdata.v1.MarketData.GetMarkPrice:output_type -> marketdata.v1.GetMarkPriceResponse
-	5,  // 20: marketdata.v1.MarketData.Convert:output_type -> marketdata.v1.ConvertResponse
-	10, // 21: marketdata.v1.MarketData.GetSymbol:output_type -> marketdata.v1.GetSymbolResponse
-	10, // 22: marketdata.v1.MarketData.GetSymbolByCode:output_type -> marketdata.v1.GetSymbolResponse
-	11, // 23: marketdata.v1.MarketData.ListSymbols:output_type -> marketdata.v1.ListSymbolsResponse
-	14, // 24: marketdata.v1.MarketData.GetTradingSessions:output_type -> marketdata.v1.GetTradingSessionsResponse
-	16, // 25: marketdata.v1.MarketData.GetHistoricalCandles:output_type -> marketdata.v1.GetHistoricalCandlesResponse
-	18, // 26: marketdata.v1.MarketData.GetHistoricalTicks:output_type -> marketdata.v1.GetHistoricalTicksResponse
-	21, // 27: marketdata.v1.MarketData.GetSymbolInfo:output_type -> marketdata.v1.GetSymbolInfoResponse
-	24, // 28: marketdata.v1.MarketData.GetProvider:output_type -> marketdata.v1.GetProviderResponse
-	26, // 29: marketdata.v1.MarketData.ListProviders:output_type -> marketdata.v1.ListProvidersResponse
-	18, // [18:30] is the sub-list for method output_type
-	6,  // [6:18] is the sub-list for method input_type
-	6,  // [6:6] is the sub-list for extension type_name
-	6,  // [6:6] is the sub-list for extension extendee
-	0,  // [0:6] is the sub-list for field type_name
+	9,  // 0: marketdata.v1.SymbolInfo.market_route:type_name -> marketdata.v1.MarketRouteInfo
+	10, // 1: marketdata.v1.GetSymbolResponse.symbol:type_name -> marketdata.v1.SymbolInfo
+	10, // 2: marketdata.v1.ListSymbolsResponse.symbols:type_name -> marketdata.v1.SymbolInfo
+	14, // 3: marketdata.v1.GetTradingSessionsResponse.sessions:type_name -> marketdata.v1.TradingSession
+	21, // 4: marketdata.v1.GetSymbolInfoResponse.symbol:type_name -> marketdata.v1.SymbolInfoDetailed
+	23, // 5: marketdata.v1.GetProviderResponse.provider:type_name -> marketdata.v1.Provider
+	23, // 6: marketdata.v1.ListProvidersResponse.providers:type_name -> marketdata.v1.Provider
+	0,  // 7: marketdata.v1.MarketData.GetTopOfBook:input_type -> marketdata.v1.GetTopOfBookRequest
+	2,  // 8: marketdata.v1.MarketData.GetMarkPrice:input_type -> marketdata.v1.GetMarkPriceRequest
+	4,  // 9: marketdata.v1.MarketData.Convert:input_type -> marketdata.v1.ConvertRequest
+	6,  // 10: marketdata.v1.MarketData.GetSymbol:input_type -> marketdata.v1.GetSymbolRequest
+	7,  // 11: marketdata.v1.MarketData.GetSymbolByCode:input_type -> marketdata.v1.GetSymbolByCodeRequest
+	8,  // 12: marketdata.v1.MarketData.ListSymbols:input_type -> marketdata.v1.ListSymbolsRequest
+	13, // 13: marketdata.v1.MarketData.GetTradingSessions:input_type -> marketdata.v1.GetTradingSessionsRequest
+	16, // 14: marketdata.v1.MarketData.GetHistoricalCandles:input_type -> marketdata.v1.GetHistoricalCandlesRequest
+	18, // 15: marketdata.v1.MarketData.GetHistoricalTicks:input_type -> marketdata.v1.GetHistoricalTicksRequest
+	20, // 16: marketdata.v1.MarketData.GetSymbolInfo:input_type -> marketdata.v1.GetSymbolInfoRequest
+	24, // 17: marketdata.v1.MarketData.GetProvider:input_type -> marketdata.v1.GetProviderRequest
+	26, // 18: marketdata.v1.MarketData.ListProviders:input_type -> marketdata.v1.ListProvidersRequest
+	1,  // 19: marketdata.v1.MarketData.GetTopOfBook:output_type -> marketdata.v1.GetTopOfBookResponse
+	3,  // 20: marketdata.v1.MarketData.GetMarkPrice:output_type -> marketdata.v1.GetMarkPriceResponse
+	5,  // 21: marketdata.v1.MarketData.Convert:output_type -> marketdata.v1.ConvertResponse
+	11, // 22: marketdata.v1.MarketData.GetSymbol:output_type -> marketdata.v1.GetSymbolResponse
+	11, // 23: marketdata.v1.MarketData.GetSymbolByCode:output_type -> marketdata.v1.GetSymbolResponse
+	12, // 24: marketdata.v1.MarketData.ListSymbols:output_type -> marketdata.v1.ListSymbolsResponse
+	15, // 25: marketdata.v1.MarketData.GetTradingSessions:output_type -> marketdata.v1.GetTradingSessionsResponse
+	17, // 26: marketdata.v1.MarketData.GetHistoricalCandles:output_type -> marketdata.v1.GetHistoricalCandlesResponse
+	19, // 27: marketdata.v1.MarketData.GetHistoricalTicks:output_type -> marketdata.v1.GetHistoricalTicksResponse
+	22, // 28: marketdata.v1.MarketData.GetSymbolInfo:output_type -> marketdata.v1.GetSymbolInfoResponse
+	25, // 29: marketdata.v1.MarketData.GetProvider:output_type -> marketdata.v1.GetProviderResponse
+	27, // 30: marketdata.v1.MarketData.ListProviders:output_type -> marketdata.v1.ListProvidersResponse
+	19, // [19:31] is the sub-list for method output_type
+	7,  // [7:19] is the sub-list for method input_type
+	7,  // [7:7] is the sub-list for extension type_name
+	7,  // [7:7] is the sub-list for extension extendee
+	0,  // [0:7] is the sub-list for field type_name
 }
 
 func init() { file_marketdata_v1_marketdata_proto_init() }
@@ -2117,14 +2204,14 @@ func file_marketdata_v1_marketdata_proto_init() {
 	if File_marketdata_v1_marketdata_proto != nil {
 		return
 	}
-	file_marketdata_v1_marketdata_proto_msgTypes[25].OneofWrappers = []any{}
+	file_marketdata_v1_marketdata_proto_msgTypes[26].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_marketdata_v1_marketdata_proto_rawDesc), len(file_marketdata_v1_marketdata_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   27,
+			NumMessages:   28,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
