@@ -111,6 +111,12 @@ message AccountInfo {
   bool is_active = 9;              // Whether the account is active
   string login = 10;               // Trading account login
   int32 leverage = 11;             // Account leverage (e.g., 100 for 1:100)
+  
+  // Account holder information
+  string first_name = 12;          // Account holder first name
+  string last_name = 13;           // Account holder last name
+  string middle_name = 14;         // Account holder middle name (optional)
+  
   optional uint32 provider_id = 20;              // Provider ID (override from group)
   optional marketdata.v1.Provider provider = 21; // Provider details (if available)
 }

@@ -572,10 +572,14 @@ type AccountInfo struct {
 	IsActive       bool                   `protobuf:"varint,9,opt,name=is_active,json=isActive,proto3" json:"is_active,omitempty"`                     // Whether the account is active
 	Login          string                 `protobuf:"bytes,10,opt,name=login,proto3" json:"login,omitempty"`                                           // Trading account login
 	Leverage       int32                  `protobuf:"varint,11,opt,name=leverage,proto3" json:"leverage,omitempty"`                                    // Account leverage (e.g., 100 for 1:100)
-	ProviderId     *uint32                `protobuf:"varint,20,opt,name=provider_id,json=providerId,proto3,oneof" json:"provider_id,omitempty"`        // Provider ID (override from group)
-	Provider       *v1.Provider           `protobuf:"bytes,21,opt,name=provider,proto3,oneof" json:"provider,omitempty"`                               // Provider details (if available)
-	unknownFields  protoimpl.UnknownFields
-	sizeCache      protoimpl.SizeCache
+	// Account holder information
+	FirstName     string       `protobuf:"bytes,12,opt,name=first_name,json=firstName,proto3" json:"first_name,omitempty"`           // Account holder first name
+	LastName      string       `protobuf:"bytes,13,opt,name=last_name,json=lastName,proto3" json:"last_name,omitempty"`              // Account holder last name
+	MiddleName    string       `protobuf:"bytes,14,opt,name=middle_name,json=middleName,proto3" json:"middle_name,omitempty"`        // Account holder middle name (optional)
+	ProviderId    *uint32      `protobuf:"varint,20,opt,name=provider_id,json=providerId,proto3,oneof" json:"provider_id,omitempty"` // Provider ID (override from group)
+	Provider      *v1.Provider `protobuf:"bytes,21,opt,name=provider,proto3,oneof" json:"provider,omitempty"`                        // Provider details (if available)
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
 }
 
 func (x *AccountInfo) Reset() {
@@ -683,6 +687,27 @@ func (x *AccountInfo) GetLeverage() int32 {
 		return x.Leverage
 	}
 	return 0
+}
+
+func (x *AccountInfo) GetFirstName() string {
+	if x != nil {
+		return x.FirstName
+	}
+	return ""
+}
+
+func (x *AccountInfo) GetLastName() string {
+	if x != nil {
+		return x.LastName
+	}
+	return ""
+}
+
+func (x *AccountInfo) GetMiddleName() string {
+	if x != nil {
+		return x.MiddleName
+	}
+	return ""
 }
 
 func (x *AccountInfo) GetProviderId() uint32 {
@@ -1769,7 +1794,7 @@ const file_accounts_v1_accounts_proto_rawDesc = "" +
 	"releasedAt\"2\n" +
 	"\x11GetAccountRequest\x12\x1d\n" +
 	"\n" +
-	"account_id\x18\x01 \x01(\x03R\taccountId\"\xd5\x03\n" +
+	"account_id\x18\x01 \x01(\x03R\taccountId\"\xb2\x04\n" +
 	"\vAccountInfo\x12\x1d\n" +
 	"\n" +
 	"account_id\x18\x01 \x01(\x03R\taccountId\x12(\n" +
@@ -1785,7 +1810,12 @@ const file_accounts_v1_accounts_proto_rawDesc = "" +
 	"\tis_active\x18\t \x01(\bR\bisActive\x12\x14\n" +
 	"\x05login\x18\n" +
 	" \x01(\tR\x05login\x12\x1a\n" +
-	"\bleverage\x18\v \x01(\x05R\bleverage\x12$\n" +
+	"\bleverage\x18\v \x01(\x05R\bleverage\x12\x1d\n" +
+	"\n" +
+	"first_name\x18\f \x01(\tR\tfirstName\x12\x1b\n" +
+	"\tlast_name\x18\r \x01(\tR\blastName\x12\x1f\n" +
+	"\vmiddle_name\x18\x0e \x01(\tR\n" +
+	"middleName\x12$\n" +
 	"\vprovider_id\x18\x14 \x01(\rH\x00R\n" +
 	"providerId\x88\x01\x01\x128\n" +
 	"\bprovider\x18\x15 \x01(\v2\x17.marketdata.v1.ProviderH\x01R\bprovider\x88\x01\x01B\x0e\n" +
