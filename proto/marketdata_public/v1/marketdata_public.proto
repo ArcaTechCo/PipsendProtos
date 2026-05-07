@@ -1,0 +1,223 @@
+syntax = "proto3";
+
+package marketdatapublicv1;
+
+option go_package = "github.com/ArcaTechCo/PipsendProtos/gen/go/marketdata_public/v1;marketdatapublicv1";
+
+// MarketDataPublic is the gRPC surface that Pipsend exposes externally so
+// other tenants can consume our data feed as if Pipsend were a provider.
+//
+// The service is split into three concerns:
+//   - Authentication (Authenticate / RefreshToken / Logout)
+//   - Catalog discovery (ListSymbolGroups / ListSymbols)
+//   - Data plane (StreamTicks for live, GetHistorical for backfills)
+//
+// Auth uses Bearer access tokens delivered in metadata under "authorization".
+// Tokens map 1:1 to a row in refresh_tokens with purpose = 'marketdata_feed'.
+service MarketDataPublic {
+  // Authenticate exchanges Pipsend account credentials (login + password) for
+  // an access/refresh token pair scoped to the marketdata feed. The
+  // refresh_token has a long TTL (~90 days) and rotates on RefreshToken.
+  rpc Authenticate(AuthRequest) returns (AuthResponse);
+
+  // RefreshToken rotates a refresh token. The previous refresh token is
+  // revoked atomically; concurrent refresh attempts using the same token
+  // result in only one winning rotation.
+  rpc RefreshToken(RefreshTokenRequest) returns (AuthResponse);
+
+  // Logout revokes a refresh token immediately. Any access tokens minted from
+  // it remain valid until expiry, since access tokens are short-lived.
+  rpc Logout(LogoutRequest) returns (LogoutResponse);
+
+  // ListSymbolGroups returns the symbol groups visible to the authenticated
+  // account. Visibility is derived from the account's permissions on the
+  // upstream catalog (account_symbols / groups).
+  rpc ListSymbolGroups(ListSymbolGroupsRequest) returns (SymbolGroupList);
+
+  // ListSymbols returns the symbols visible to the account, optionally
+  // filtered by group, asset class, or free-text search.
+  rpc ListSymbols(ListSymbolsRequest) returns (SymbolList);
+
+  // StreamTicks opens a server-streaming RPC pushing TickBatch messages for
+  // the requested symbols (max 400 per subscription). The server applies a
+  // drop policy when a consumer cannot keep up; the connection is terminated
+  // after a configurable threshold of consecutive drops.
+  rpc StreamTicks(SubscribeRequest) returns (stream TickBatch);
+
+  // GetHistorical streams OHLCV candles for a single symbol over a
+  // [from, to) window. Compression (gzip) is recommended via the standard
+  // gRPC compression knob.
+  rpc GetHistorical(HistoricalRequest) returns (stream Candle);
+}
+
+// ============================================================================
+// Auth messages
+// ============================================================================
+
+// AuthRequest carries the credentials of a Pipsend account plus a free-form
+// client_name the user can recognize later in their "active sessions" panel.
+message AuthRequest {
+  string login = 1;        // Pipsend account login (email/username)
+  string password = 2;     // Plaintext password (transport is TLS)
+  string client_name = 3;  // Human-friendly identifier, e.g. "Client2 prod"
+}
+
+// AuthResponse carries the token pair and the streaming endpoint the consumer
+// should use for StreamTicks. The endpoint may differ from the host that
+// served Authenticate (different DNS, different LB).
+message AuthResponse {
+  string access_token = 1;   // Short-lived (15 min)
+  string refresh_token = 2;  // Long-lived (90 days), rotated on use
+  string endpoint = 3;       // gRPC endpoint for StreamTicks (host:port)
+  int64 access_expires_at = 4;   // Unix ms
+  int64 refresh_expires_at = 5;  // Unix ms
+  uint64 user_id = 6;            // Pipsend account id (informational)
+}
+
+message RefreshTokenRequest {
+  string refresh_token = 1;
+}
+
+message LogoutRequest {
+  string refresh_token = 1;
+}
+
+message LogoutResponse {
+  bool revoked = 1;
+}
+
+// ============================================================================
+// Catalog messages
+// ============================================================================
+
+// AssetClass is the canonical taxonomy used across Pipsend.
+// Mirrors providers.AssetClass* constants in the marketdata service.
+enum AssetClass {
+  ASSET_CLASS_UNSPECIFIED = 0;
+  ASSET_CLASS_FOREX = 1;
+  ASSET_CLASS_CRYPTO = 2;
+  ASSET_CLASS_METALS = 3;
+  ASSET_CLASS_INDICES = 4;
+  ASSET_CLASS_COMMODITIES = 5;
+  ASSET_CLASS_STOCKS = 6;
+  ASSET_CLASS_OTHER = 99;
+}
+
+message ListSymbolGroupsRequest {
+  // Reserved for future filters. Empty for now.
+}
+
+message SymbolGroupList {
+  repeated SymbolGroup groups = 1;
+}
+
+message SymbolGroup {
+  uint64 id = 1;
+  string name = 2;
+  string description = 3;
+  // Optional: the dominant asset class for the group, when meaningful.
+  AssetClass asset_class = 4;
+}
+
+message ListSymbolsRequest {
+  // All filters are optional; combined with AND.
+  optional uint64 group_id = 1;
+  optional AssetClass asset_class = 2;
+  optional string search = 3;  // case-insensitive substring on code/name
+}
+
+message SymbolList {
+  repeated Symbol symbols = 1;
+}
+
+message Symbol {
+  string code = 1;          // Provider-canonical code, e.g. "EURUSD.i"
+  string display_name = 2;  // "EUR/USD"
+  string description = 3;
+  AssetClass asset_class = 4;
+  optional uint64 group_id = 5;
+  string group_name = 6;    // Convenience copy of the group's name
+  int32 digits = 7;
+  // Trading metadata, sent as decimal strings to preserve precision.
+  string contract_size = 8;
+  string tick_size = 9;
+}
+
+// ============================================================================
+// Streaming messages
+// ============================================================================
+
+// SubscribeRequest opens the live tick stream. The server validates that the
+// authenticated account has access to every requested symbol and rejects
+// the whole stream with PERMISSION_DENIED if any is forbidden.
+message SubscribeRequest {
+  repeated string symbols = 1;  // Max 400 entries per stream.
+}
+
+// TickType matches the internal providers.TickType taxonomy.
+enum TickType {
+  TICK_TYPE_UNSPECIFIED = 0;
+  TICK_TYPE_TRADE = 1;
+  TICK_TYPE_BID = 2;
+  TICK_TYPE_ASK = 3;
+  TICK_TYPE_AGG = 4;
+  TICK_TYPE_QUOTE = 5;
+}
+
+// Tick is one market data update. We use double for bid/ask/price because
+// the precision loss is well below tick size for every supported asset class.
+message Tick {
+  string symbol = 1;     // Symbol code as in the catalog
+  double bid = 2;        // 0 for trade-only providers
+  double ask = 3;        // 0 for trade-only providers
+  double price = 4;      // Mid for quotes, trade price for trades
+  double volume = 5;     // 0 if not available
+  int64 ts_unix_ms = 6;  // Source timestamp in Unix milliseconds
+  TickType type = 7;
+}
+
+// TickBatch groups multiple ticks delivered in the same physical message.
+// The server may emit a single tick per batch (low-volatility symbol) or
+// many (high-frequency aggregator). server_time helps consumers reason about
+// network-induced latency.
+message TickBatch {
+  repeated Tick ticks = 1;
+  int64 server_time_unix_ms = 2;
+}
+
+// ============================================================================
+// Historical messages
+// ============================================================================
+
+// Timeframe enumerates the supported candle resolutions. Strings like "M1"
+// are used elsewhere in the platform; we keep an enum here for type safety
+// on the public boundary.
+enum Timeframe {
+  TIMEFRAME_UNSPECIFIED = 0;
+  TIMEFRAME_M1 = 1;   // 1 minute
+  TIMEFRAME_M5 = 2;
+  TIMEFRAME_M15 = 3;
+  TIMEFRAME_M30 = 4;
+  TIMEFRAME_H1 = 5;
+  TIMEFRAME_H4 = 6;
+  TIMEFRAME_D1 = 7;
+  TIMEFRAME_W1 = 8;
+  TIMEFRAME_MN = 9;
+}
+
+message HistoricalRequest {
+  string symbol = 1;        // Symbol code
+  Timeframe timeframe = 2;
+  int64 from_unix_ms = 3;   // Inclusive
+  int64 to_unix_ms = 4;     // Exclusive
+}
+
+// Candle mirrors the existing GetHistoricalCandlesResponse for consistency.
+message Candle {
+  int64 time_unix_ms = 1;
+  double open = 2;
+  double high = 3;
+  double low = 4;
+  double close = 5;
+  int64 volume = 6;
+}
