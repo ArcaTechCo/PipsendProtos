@@ -755,17 +755,53 @@ func (x *SymbolList) GetSymbols() []*Symbol {
 }
 
 type Symbol struct {
-	state       protoimpl.MessageState `protogen:"open.v1"`
-	Code        string                 `protobuf:"bytes,1,opt,name=code,proto3" json:"code,omitempty"`                                  // Provider-canonical code, e.g. "EURUSD.i"
-	DisplayName string                 `protobuf:"bytes,2,opt,name=display_name,json=displayName,proto3" json:"display_name,omitempty"` // "EUR/USD"
-	Description string                 `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
-	AssetClass  AssetClass             `protobuf:"varint,4,opt,name=asset_class,json=assetClass,proto3,enum=marketdatapublicv1.AssetClass" json:"asset_class,omitempty"`
-	GroupId     *uint64                `protobuf:"varint,5,opt,name=group_id,json=groupId,proto3,oneof" json:"group_id,omitempty"`
-	GroupName   string                 `protobuf:"bytes,6,opt,name=group_name,json=groupName,proto3" json:"group_name,omitempty"` // Convenience copy of the group's name
-	Digits      int32                  `protobuf:"varint,7,opt,name=digits,proto3" json:"digits,omitempty"`
-	// Trading metadata, sent as decimal strings to preserve precision.
-	ContractSize  string `protobuf:"bytes,8,opt,name=contract_size,json=contractSize,proto3" json:"contract_size,omitempty"`
-	TickSize      string `protobuf:"bytes,9,opt,name=tick_size,json=tickSize,proto3" json:"tick_size,omitempty"`
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// === Identity ===
+	Code        string     `protobuf:"bytes,1,opt,name=code,proto3" json:"code,omitempty"`                                  // Symbol code, e.g. "EURUSD"
+	DisplayName string     `protobuf:"bytes,2,opt,name=display_name,json=displayName,proto3" json:"display_name,omitempty"` // Human-friendly, e.g. "EUR/USD"
+	Description string     `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
+	AssetClass  AssetClass `protobuf:"varint,4,opt,name=asset_class,json=assetClass,proto3,enum=marketdatapublicv1.AssetClass" json:"asset_class,omitempty"` // Canonical taxonomy
+	AssetType   string     `protobuf:"bytes,30,opt,name=asset_type,json=assetType,proto3" json:"asset_type,omitempty"`                                       // Raw asset_type from DB (forex|crypto|metals|...)
+	IsActive    bool       `protobuf:"varint,31,opt,name=is_active,json=isActive,proto3" json:"is_active,omitempty"`
+	// === Grouping & currencies ===
+	GroupId           *uint64 `protobuf:"varint,5,opt,name=group_id,json=groupId,proto3,oneof" json:"group_id,omitempty"`
+	GroupName         string  `protobuf:"bytes,6,opt,name=group_name,json=groupName,proto3" json:"group_name,omitempty"`
+	CurrencyId        uint64  `protobuf:"varint,32,opt,name=currency_id,json=currencyId,proto3" json:"currency_id,omitempty"`
+	BaseCurrencyCode  string  `protobuf:"bytes,33,opt,name=base_currency_code,json=baseCurrencyCode,proto3" json:"base_currency_code,omitempty"`
+	QuoteCurrencyCode string  `protobuf:"bytes,34,opt,name=quote_currency_code,json=quoteCurrencyCode,proto3" json:"quote_currency_code,omitempty"`
+	// === Pricing precision ===
+	Digits       int32  `protobuf:"varint,7,opt,name=digits,proto3" json:"digits,omitempty"`
+	ContractSize string `protobuf:"bytes,8,opt,name=contract_size,json=contractSize,proto3" json:"contract_size,omitempty"`
+	TickSize     string `protobuf:"bytes,9,opt,name=tick_size,json=tickSize,proto3" json:"tick_size,omitempty"`
+	Step         string `protobuf:"bytes,35,opt,name=step,proto3" json:"step,omitempty"`
+	PointValue   string `protobuf:"bytes,36,opt,name=point_value,json=pointValue,proto3" json:"point_value,omitempty"`
+	// === Trade sizing ===
+	MinTradeSize string `protobuf:"bytes,37,opt,name=min_trade_size,json=minTradeSize,proto3" json:"min_trade_size,omitempty"`
+	MaxTradeSize string `protobuf:"bytes,38,opt,name=max_trade_size,json=maxTradeSize,proto3" json:"max_trade_size,omitempty"`
+	VolumeMin    string `protobuf:"bytes,39,opt,name=volume_min,json=volumeMin,proto3" json:"volume_min,omitempty"`
+	VolumeMax    string `protobuf:"bytes,40,opt,name=volume_max,json=volumeMax,proto3" json:"volume_max,omitempty"`
+	VolumeStep   string `protobuf:"bytes,41,opt,name=volume_step,json=volumeStep,proto3" json:"volume_step,omitempty"`
+	// === Margin / spread ===
+	Margin         string `protobuf:"bytes,42,opt,name=margin,proto3" json:"margin,omitempty"`
+	RequiredMargin string `protobuf:"bytes,43,opt,name=required_margin,json=requiredMargin,proto3" json:"required_margin,omitempty"`
+	Spread         string `protobuf:"bytes,44,opt,name=spread,proto3" json:"spread,omitempty"`
+	SpreadBalance  string `protobuf:"bytes,45,opt,name=spread_balance,json=spreadBalance,proto3" json:"spread_balance,omitempty"`
+	// === Costs / P&L knobs ===
+	Swap       string `protobuf:"bytes,46,opt,name=swap,proto3" json:"swap,omitempty"`
+	Profit     string `protobuf:"bytes,47,opt,name=profit,proto3" json:"profit,omitempty"`
+	Loss       string `protobuf:"bytes,48,opt,name=loss,proto3" json:"loss,omitempty"`
+	Percent    string `protobuf:"bytes,49,opt,name=percent,proto3" json:"percent,omitempty"`
+	Percentage string `protobuf:"bytes,50,opt,name=percentage,proto3" json:"percentage,omitempty"`
+	// === Execution & UI ===
+	ExecutionMode     string `protobuf:"bytes,51,opt,name=execution_mode,json=executionMode,proto3" json:"execution_mode,omitempty"`        // "market" | "instant"
+	DefaultPosition   int32  `protobuf:"varint,52,opt,name=default_position,json=defaultPosition,proto3" json:"default_position,omitempty"` // UI ordering
+	IsDefaultFavorite bool   `protobuf:"varint,53,opt,name=is_default_favorite,json=isDefaultFavorite,proto3" json:"is_default_favorite,omitempty"`
+	MetadataJson      string `protobuf:"bytes,54,opt,name=metadata_json,json=metadataJson,proto3" json:"metadata_json,omitempty"` // Free-form JSON serialized to string
+	// === Trading hours ===
+	TradeSessions []*TradeSession `protobuf:"bytes,55,rep,name=trade_sessions,json=tradeSessions,proto3" json:"trade_sessions,omitempty"`
+	// === Timestamps (Unix ms) ===
+	CreatedAt     int64 `protobuf:"varint,56,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	UpdatedAt     int64 `protobuf:"varint,57,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -828,6 +864,20 @@ func (x *Symbol) GetAssetClass() AssetClass {
 	return AssetClass_ASSET_CLASS_UNSPECIFIED
 }
 
+func (x *Symbol) GetAssetType() string {
+	if x != nil {
+		return x.AssetType
+	}
+	return ""
+}
+
+func (x *Symbol) GetIsActive() bool {
+	if x != nil {
+		return x.IsActive
+	}
+	return false
+}
+
 func (x *Symbol) GetGroupId() uint64 {
 	if x != nil && x.GroupId != nil {
 		return *x.GroupId
@@ -838,6 +888,27 @@ func (x *Symbol) GetGroupId() uint64 {
 func (x *Symbol) GetGroupName() string {
 	if x != nil {
 		return x.GroupName
+	}
+	return ""
+}
+
+func (x *Symbol) GetCurrencyId() uint64 {
+	if x != nil {
+		return x.CurrencyId
+	}
+	return 0
+}
+
+func (x *Symbol) GetBaseCurrencyCode() string {
+	if x != nil {
+		return x.BaseCurrencyCode
+	}
+	return ""
+}
+
+func (x *Symbol) GetQuoteCurrencyCode() string {
+	if x != nil {
+		return x.QuoteCurrencyCode
 	}
 	return ""
 }
@@ -863,6 +934,260 @@ func (x *Symbol) GetTickSize() string {
 	return ""
 }
 
+func (x *Symbol) GetStep() string {
+	if x != nil {
+		return x.Step
+	}
+	return ""
+}
+
+func (x *Symbol) GetPointValue() string {
+	if x != nil {
+		return x.PointValue
+	}
+	return ""
+}
+
+func (x *Symbol) GetMinTradeSize() string {
+	if x != nil {
+		return x.MinTradeSize
+	}
+	return ""
+}
+
+func (x *Symbol) GetMaxTradeSize() string {
+	if x != nil {
+		return x.MaxTradeSize
+	}
+	return ""
+}
+
+func (x *Symbol) GetVolumeMin() string {
+	if x != nil {
+		return x.VolumeMin
+	}
+	return ""
+}
+
+func (x *Symbol) GetVolumeMax() string {
+	if x != nil {
+		return x.VolumeMax
+	}
+	return ""
+}
+
+func (x *Symbol) GetVolumeStep() string {
+	if x != nil {
+		return x.VolumeStep
+	}
+	return ""
+}
+
+func (x *Symbol) GetMargin() string {
+	if x != nil {
+		return x.Margin
+	}
+	return ""
+}
+
+func (x *Symbol) GetRequiredMargin() string {
+	if x != nil {
+		return x.RequiredMargin
+	}
+	return ""
+}
+
+func (x *Symbol) GetSpread() string {
+	if x != nil {
+		return x.Spread
+	}
+	return ""
+}
+
+func (x *Symbol) GetSpreadBalance() string {
+	if x != nil {
+		return x.SpreadBalance
+	}
+	return ""
+}
+
+func (x *Symbol) GetSwap() string {
+	if x != nil {
+		return x.Swap
+	}
+	return ""
+}
+
+func (x *Symbol) GetProfit() string {
+	if x != nil {
+		return x.Profit
+	}
+	return ""
+}
+
+func (x *Symbol) GetLoss() string {
+	if x != nil {
+		return x.Loss
+	}
+	return ""
+}
+
+func (x *Symbol) GetPercent() string {
+	if x != nil {
+		return x.Percent
+	}
+	return ""
+}
+
+func (x *Symbol) GetPercentage() string {
+	if x != nil {
+		return x.Percentage
+	}
+	return ""
+}
+
+func (x *Symbol) GetExecutionMode() string {
+	if x != nil {
+		return x.ExecutionMode
+	}
+	return ""
+}
+
+func (x *Symbol) GetDefaultPosition() int32 {
+	if x != nil {
+		return x.DefaultPosition
+	}
+	return 0
+}
+
+func (x *Symbol) GetIsDefaultFavorite() bool {
+	if x != nil {
+		return x.IsDefaultFavorite
+	}
+	return false
+}
+
+func (x *Symbol) GetMetadataJson() string {
+	if x != nil {
+		return x.MetadataJson
+	}
+	return ""
+}
+
+func (x *Symbol) GetTradeSessions() []*TradeSession {
+	if x != nil {
+		return x.TradeSessions
+	}
+	return nil
+}
+
+func (x *Symbol) GetCreatedAt() int64 {
+	if x != nil {
+		return x.CreatedAt
+	}
+	return 0
+}
+
+func (x *Symbol) GetUpdatedAt() int64 {
+	if x != nil {
+		return x.UpdatedAt
+	}
+	return 0
+}
+
+// TradeSession is one weekday's quoting+trading window.
+type TradeSession struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	DayId         string                 `protobuf:"bytes,1,opt,name=day_id,json=dayId,proto3" json:"day_id,omitempty"`       // "sunday".."saturday"
+	DayName       string                 `protobuf:"bytes,2,opt,name=day_name,json=dayName,proto3" json:"day_name,omitempty"` // "Sunday".."Saturday"
+	Enabled       bool                   `protobuf:"varint,3,opt,name=enabled,proto3" json:"enabled,omitempty"`
+	QuotesStart   string                 `protobuf:"bytes,4,opt,name=quotes_start,json=quotesStart,proto3" json:"quotes_start,omitempty"` // "HH:MM"
+	QuotesEnd     string                 `protobuf:"bytes,5,opt,name=quotes_end,json=quotesEnd,proto3" json:"quotes_end,omitempty"`
+	TradeStart    string                 `protobuf:"bytes,6,opt,name=trade_start,json=tradeStart,proto3" json:"trade_start,omitempty"`
+	TradeEnd      string                 `protobuf:"bytes,7,opt,name=trade_end,json=tradeEnd,proto3" json:"trade_end,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *TradeSession) Reset() {
+	*x = TradeSession{}
+	mi := &file_marketdata_public_v1_marketdata_public_proto_msgTypes[11]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *TradeSession) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*TradeSession) ProtoMessage() {}
+
+func (x *TradeSession) ProtoReflect() protoreflect.Message {
+	mi := &file_marketdata_public_v1_marketdata_public_proto_msgTypes[11]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use TradeSession.ProtoReflect.Descriptor instead.
+func (*TradeSession) Descriptor() ([]byte, []int) {
+	return file_marketdata_public_v1_marketdata_public_proto_rawDescGZIP(), []int{11}
+}
+
+func (x *TradeSession) GetDayId() string {
+	if x != nil {
+		return x.DayId
+	}
+	return ""
+}
+
+func (x *TradeSession) GetDayName() string {
+	if x != nil {
+		return x.DayName
+	}
+	return ""
+}
+
+func (x *TradeSession) GetEnabled() bool {
+	if x != nil {
+		return x.Enabled
+	}
+	return false
+}
+
+func (x *TradeSession) GetQuotesStart() string {
+	if x != nil {
+		return x.QuotesStart
+	}
+	return ""
+}
+
+func (x *TradeSession) GetQuotesEnd() string {
+	if x != nil {
+		return x.QuotesEnd
+	}
+	return ""
+}
+
+func (x *TradeSession) GetTradeStart() string {
+	if x != nil {
+		return x.TradeStart
+	}
+	return ""
+}
+
+func (x *TradeSession) GetTradeEnd() string {
+	if x != nil {
+		return x.TradeEnd
+	}
+	return ""
+}
+
 // SubscribeRequest opens the live tick stream. The server validates that the
 // authenticated account has access to every requested symbol and rejects
 // the whole stream with PERMISSION_DENIED if any is forbidden.
@@ -875,7 +1200,7 @@ type SubscribeRequest struct {
 
 func (x *SubscribeRequest) Reset() {
 	*x = SubscribeRequest{}
-	mi := &file_marketdata_public_v1_marketdata_public_proto_msgTypes[11]
+	mi := &file_marketdata_public_v1_marketdata_public_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -887,7 +1212,7 @@ func (x *SubscribeRequest) String() string {
 func (*SubscribeRequest) ProtoMessage() {}
 
 func (x *SubscribeRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_marketdata_public_v1_marketdata_public_proto_msgTypes[11]
+	mi := &file_marketdata_public_v1_marketdata_public_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -900,7 +1225,7 @@ func (x *SubscribeRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SubscribeRequest.ProtoReflect.Descriptor instead.
 func (*SubscribeRequest) Descriptor() ([]byte, []int) {
-	return file_marketdata_public_v1_marketdata_public_proto_rawDescGZIP(), []int{11}
+	return file_marketdata_public_v1_marketdata_public_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *SubscribeRequest) GetSymbols() []string {
@@ -927,7 +1252,7 @@ type Tick struct {
 
 func (x *Tick) Reset() {
 	*x = Tick{}
-	mi := &file_marketdata_public_v1_marketdata_public_proto_msgTypes[12]
+	mi := &file_marketdata_public_v1_marketdata_public_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -939,7 +1264,7 @@ func (x *Tick) String() string {
 func (*Tick) ProtoMessage() {}
 
 func (x *Tick) ProtoReflect() protoreflect.Message {
-	mi := &file_marketdata_public_v1_marketdata_public_proto_msgTypes[12]
+	mi := &file_marketdata_public_v1_marketdata_public_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -952,7 +1277,7 @@ func (x *Tick) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Tick.ProtoReflect.Descriptor instead.
 func (*Tick) Descriptor() ([]byte, []int) {
-	return file_marketdata_public_v1_marketdata_public_proto_rawDescGZIP(), []int{12}
+	return file_marketdata_public_v1_marketdata_public_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *Tick) GetSymbol() string {
@@ -1018,7 +1343,7 @@ type TickBatch struct {
 
 func (x *TickBatch) Reset() {
 	*x = TickBatch{}
-	mi := &file_marketdata_public_v1_marketdata_public_proto_msgTypes[13]
+	mi := &file_marketdata_public_v1_marketdata_public_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1030,7 +1355,7 @@ func (x *TickBatch) String() string {
 func (*TickBatch) ProtoMessage() {}
 
 func (x *TickBatch) ProtoReflect() protoreflect.Message {
-	mi := &file_marketdata_public_v1_marketdata_public_proto_msgTypes[13]
+	mi := &file_marketdata_public_v1_marketdata_public_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1043,7 +1368,7 @@ func (x *TickBatch) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use TickBatch.ProtoReflect.Descriptor instead.
 func (*TickBatch) Descriptor() ([]byte, []int) {
-	return file_marketdata_public_v1_marketdata_public_proto_rawDescGZIP(), []int{13}
+	return file_marketdata_public_v1_marketdata_public_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *TickBatch) GetTicks() []*Tick {
@@ -1072,7 +1397,7 @@ type HistoricalRequest struct {
 
 func (x *HistoricalRequest) Reset() {
 	*x = HistoricalRequest{}
-	mi := &file_marketdata_public_v1_marketdata_public_proto_msgTypes[14]
+	mi := &file_marketdata_public_v1_marketdata_public_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1084,7 +1409,7 @@ func (x *HistoricalRequest) String() string {
 func (*HistoricalRequest) ProtoMessage() {}
 
 func (x *HistoricalRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_marketdata_public_v1_marketdata_public_proto_msgTypes[14]
+	mi := &file_marketdata_public_v1_marketdata_public_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1097,7 +1422,7 @@ func (x *HistoricalRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use HistoricalRequest.ProtoReflect.Descriptor instead.
 func (*HistoricalRequest) Descriptor() ([]byte, []int) {
-	return file_marketdata_public_v1_marketdata_public_proto_rawDescGZIP(), []int{14}
+	return file_marketdata_public_v1_marketdata_public_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *HistoricalRequest) GetSymbol() string {
@@ -1143,7 +1468,7 @@ type Candle struct {
 
 func (x *Candle) Reset() {
 	*x = Candle{}
-	mi := &file_marketdata_public_v1_marketdata_public_proto_msgTypes[15]
+	mi := &file_marketdata_public_v1_marketdata_public_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1155,7 +1480,7 @@ func (x *Candle) String() string {
 func (*Candle) ProtoMessage() {}
 
 func (x *Candle) ProtoReflect() protoreflect.Message {
-	mi := &file_marketdata_public_v1_marketdata_public_proto_msgTypes[15]
+	mi := &file_marketdata_public_v1_marketdata_public_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1168,7 +1493,7 @@ func (x *Candle) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use Candle.ProtoReflect.Descriptor instead.
 func (*Candle) Descriptor() ([]byte, []int) {
-	return file_marketdata_public_v1_marketdata_public_proto_rawDescGZIP(), []int{15}
+	return file_marketdata_public_v1_marketdata_public_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *Candle) GetTimeUnixMs() int64 {
@@ -1255,20 +1580,69 @@ const file_marketdata_public_v1_marketdata_public_proto_rawDesc = "" +
 	"\a_search\"B\n" +
 	"\n" +
 	"SymbolList\x124\n" +
-	"\asymbols\x18\x01 \x03(\v2\x1a.marketdatapublicv1.SymbolR\asymbols\"\xc8\x02\n" +
+	"\asymbols\x18\x01 \x03(\v2\x1a.marketdatapublicv1.SymbolR\asymbols\"\x8b\n" +
+	"\n" +
 	"\x06Symbol\x12\x12\n" +
 	"\x04code\x18\x01 \x01(\tR\x04code\x12!\n" +
 	"\fdisplay_name\x18\x02 \x01(\tR\vdisplayName\x12 \n" +
 	"\vdescription\x18\x03 \x01(\tR\vdescription\x12?\n" +
 	"\vasset_class\x18\x04 \x01(\x0e2\x1e.marketdatapublicv1.AssetClassR\n" +
-	"assetClass\x12\x1e\n" +
+	"assetClass\x12\x1d\n" +
+	"\n" +
+	"asset_type\x18\x1e \x01(\tR\tassetType\x12\x1b\n" +
+	"\tis_active\x18\x1f \x01(\bR\bisActive\x12\x1e\n" +
 	"\bgroup_id\x18\x05 \x01(\x04H\x00R\agroupId\x88\x01\x01\x12\x1d\n" +
 	"\n" +
-	"group_name\x18\x06 \x01(\tR\tgroupName\x12\x16\n" +
+	"group_name\x18\x06 \x01(\tR\tgroupName\x12\x1f\n" +
+	"\vcurrency_id\x18  \x01(\x04R\n" +
+	"currencyId\x12,\n" +
+	"\x12base_currency_code\x18! \x01(\tR\x10baseCurrencyCode\x12.\n" +
+	"\x13quote_currency_code\x18\" \x01(\tR\x11quoteCurrencyCode\x12\x16\n" +
 	"\x06digits\x18\a \x01(\x05R\x06digits\x12#\n" +
 	"\rcontract_size\x18\b \x01(\tR\fcontractSize\x12\x1b\n" +
-	"\ttick_size\x18\t \x01(\tR\btickSizeB\v\n" +
-	"\t_group_id\",\n" +
+	"\ttick_size\x18\t \x01(\tR\btickSize\x12\x12\n" +
+	"\x04step\x18# \x01(\tR\x04step\x12\x1f\n" +
+	"\vpoint_value\x18$ \x01(\tR\n" +
+	"pointValue\x12$\n" +
+	"\x0emin_trade_size\x18% \x01(\tR\fminTradeSize\x12$\n" +
+	"\x0emax_trade_size\x18& \x01(\tR\fmaxTradeSize\x12\x1d\n" +
+	"\n" +
+	"volume_min\x18' \x01(\tR\tvolumeMin\x12\x1d\n" +
+	"\n" +
+	"volume_max\x18( \x01(\tR\tvolumeMax\x12\x1f\n" +
+	"\vvolume_step\x18) \x01(\tR\n" +
+	"volumeStep\x12\x16\n" +
+	"\x06margin\x18* \x01(\tR\x06margin\x12'\n" +
+	"\x0frequired_margin\x18+ \x01(\tR\x0erequiredMargin\x12\x16\n" +
+	"\x06spread\x18, \x01(\tR\x06spread\x12%\n" +
+	"\x0espread_balance\x18- \x01(\tR\rspreadBalance\x12\x12\n" +
+	"\x04swap\x18. \x01(\tR\x04swap\x12\x16\n" +
+	"\x06profit\x18/ \x01(\tR\x06profit\x12\x12\n" +
+	"\x04loss\x180 \x01(\tR\x04loss\x12\x18\n" +
+	"\apercent\x181 \x01(\tR\apercent\x12\x1e\n" +
+	"\n" +
+	"percentage\x182 \x01(\tR\n" +
+	"percentage\x12%\n" +
+	"\x0eexecution_mode\x183 \x01(\tR\rexecutionMode\x12)\n" +
+	"\x10default_position\x184 \x01(\x05R\x0fdefaultPosition\x12.\n" +
+	"\x13is_default_favorite\x185 \x01(\bR\x11isDefaultFavorite\x12#\n" +
+	"\rmetadata_json\x186 \x01(\tR\fmetadataJson\x12G\n" +
+	"\x0etrade_sessions\x187 \x03(\v2 .marketdatapublicv1.TradeSessionR\rtradeSessions\x12\x1d\n" +
+	"\n" +
+	"created_at\x188 \x01(\x03R\tcreatedAt\x12\x1d\n" +
+	"\n" +
+	"updated_at\x189 \x01(\x03R\tupdatedAtB\v\n" +
+	"\t_group_id\"\xda\x01\n" +
+	"\fTradeSession\x12\x15\n" +
+	"\x06day_id\x18\x01 \x01(\tR\x05dayId\x12\x19\n" +
+	"\bday_name\x18\x02 \x01(\tR\adayName\x12\x18\n" +
+	"\aenabled\x18\x03 \x01(\bR\aenabled\x12!\n" +
+	"\fquotes_start\x18\x04 \x01(\tR\vquotesStart\x12\x1d\n" +
+	"\n" +
+	"quotes_end\x18\x05 \x01(\tR\tquotesEnd\x12\x1f\n" +
+	"\vtrade_start\x18\x06 \x01(\tR\n" +
+	"tradeStart\x12\x1b\n" +
+	"\ttrade_end\x18\a \x01(\tR\btradeEnd\",\n" +
 	"\x10SubscribeRequest\x12\x18\n" +
 	"\asymbols\x18\x01 \x03(\tR\asymbols\"\xc0\x01\n" +
 	"\x04Tick\x12\x16\n" +
@@ -1348,7 +1722,7 @@ func file_marketdata_public_v1_marketdata_public_proto_rawDescGZIP() []byte {
 }
 
 var file_marketdata_public_v1_marketdata_public_proto_enumTypes = make([]protoimpl.EnumInfo, 3)
-var file_marketdata_public_v1_marketdata_public_proto_msgTypes = make([]protoimpl.MessageInfo, 16)
+var file_marketdata_public_v1_marketdata_public_proto_msgTypes = make([]protoimpl.MessageInfo, 17)
 var file_marketdata_public_v1_marketdata_public_proto_goTypes = []any{
 	(AssetClass)(0),                 // 0: marketdatapublicv1.AssetClass
 	(TickType)(0),                   // 1: marketdatapublicv1.TickType
@@ -1364,11 +1738,12 @@ var file_marketdata_public_v1_marketdata_public_proto_goTypes = []any{
 	(*ListSymbolsRequest)(nil),      // 11: marketdatapublicv1.ListSymbolsRequest
 	(*SymbolList)(nil),              // 12: marketdatapublicv1.SymbolList
 	(*Symbol)(nil),                  // 13: marketdatapublicv1.Symbol
-	(*SubscribeRequest)(nil),        // 14: marketdatapublicv1.SubscribeRequest
-	(*Tick)(nil),                    // 15: marketdatapublicv1.Tick
-	(*TickBatch)(nil),               // 16: marketdatapublicv1.TickBatch
-	(*HistoricalRequest)(nil),       // 17: marketdatapublicv1.HistoricalRequest
-	(*Candle)(nil),                  // 18: marketdatapublicv1.Candle
+	(*TradeSession)(nil),            // 14: marketdatapublicv1.TradeSession
+	(*SubscribeRequest)(nil),        // 15: marketdatapublicv1.SubscribeRequest
+	(*Tick)(nil),                    // 16: marketdatapublicv1.Tick
+	(*TickBatch)(nil),               // 17: marketdatapublicv1.TickBatch
+	(*HistoricalRequest)(nil),       // 18: marketdatapublicv1.HistoricalRequest
+	(*Candle)(nil),                  // 19: marketdatapublicv1.Candle
 }
 var file_marketdata_public_v1_marketdata_public_proto_depIdxs = []int32{
 	10, // 0: marketdatapublicv1.SymbolGroupList.groups:type_name -> marketdatapublicv1.SymbolGroup
@@ -1376,28 +1751,29 @@ var file_marketdata_public_v1_marketdata_public_proto_depIdxs = []int32{
 	0,  // 2: marketdatapublicv1.ListSymbolsRequest.asset_class:type_name -> marketdatapublicv1.AssetClass
 	13, // 3: marketdatapublicv1.SymbolList.symbols:type_name -> marketdatapublicv1.Symbol
 	0,  // 4: marketdatapublicv1.Symbol.asset_class:type_name -> marketdatapublicv1.AssetClass
-	1,  // 5: marketdatapublicv1.Tick.type:type_name -> marketdatapublicv1.TickType
-	15, // 6: marketdatapublicv1.TickBatch.ticks:type_name -> marketdatapublicv1.Tick
-	2,  // 7: marketdatapublicv1.HistoricalRequest.timeframe:type_name -> marketdatapublicv1.Timeframe
-	3,  // 8: marketdatapublicv1.MarketDataPublic.Authenticate:input_type -> marketdatapublicv1.AuthRequest
-	5,  // 9: marketdatapublicv1.MarketDataPublic.RefreshToken:input_type -> marketdatapublicv1.RefreshTokenRequest
-	6,  // 10: marketdatapublicv1.MarketDataPublic.Logout:input_type -> marketdatapublicv1.LogoutRequest
-	8,  // 11: marketdatapublicv1.MarketDataPublic.ListSymbolGroups:input_type -> marketdatapublicv1.ListSymbolGroupsRequest
-	11, // 12: marketdatapublicv1.MarketDataPublic.ListSymbols:input_type -> marketdatapublicv1.ListSymbolsRequest
-	14, // 13: marketdatapublicv1.MarketDataPublic.StreamTicks:input_type -> marketdatapublicv1.SubscribeRequest
-	17, // 14: marketdatapublicv1.MarketDataPublic.GetHistorical:input_type -> marketdatapublicv1.HistoricalRequest
-	4,  // 15: marketdatapublicv1.MarketDataPublic.Authenticate:output_type -> marketdatapublicv1.AuthResponse
-	4,  // 16: marketdatapublicv1.MarketDataPublic.RefreshToken:output_type -> marketdatapublicv1.AuthResponse
-	7,  // 17: marketdatapublicv1.MarketDataPublic.Logout:output_type -> marketdatapublicv1.LogoutResponse
-	9,  // 18: marketdatapublicv1.MarketDataPublic.ListSymbolGroups:output_type -> marketdatapublicv1.SymbolGroupList
-	12, // 19: marketdatapublicv1.MarketDataPublic.ListSymbols:output_type -> marketdatapublicv1.SymbolList
-	16, // 20: marketdatapublicv1.MarketDataPublic.StreamTicks:output_type -> marketdatapublicv1.TickBatch
-	18, // 21: marketdatapublicv1.MarketDataPublic.GetHistorical:output_type -> marketdatapublicv1.Candle
-	15, // [15:22] is the sub-list for method output_type
-	8,  // [8:15] is the sub-list for method input_type
-	8,  // [8:8] is the sub-list for extension type_name
-	8,  // [8:8] is the sub-list for extension extendee
-	0,  // [0:8] is the sub-list for field type_name
+	14, // 5: marketdatapublicv1.Symbol.trade_sessions:type_name -> marketdatapublicv1.TradeSession
+	1,  // 6: marketdatapublicv1.Tick.type:type_name -> marketdatapublicv1.TickType
+	16, // 7: marketdatapublicv1.TickBatch.ticks:type_name -> marketdatapublicv1.Tick
+	2,  // 8: marketdatapublicv1.HistoricalRequest.timeframe:type_name -> marketdatapublicv1.Timeframe
+	3,  // 9: marketdatapublicv1.MarketDataPublic.Authenticate:input_type -> marketdatapublicv1.AuthRequest
+	5,  // 10: marketdatapublicv1.MarketDataPublic.RefreshToken:input_type -> marketdatapublicv1.RefreshTokenRequest
+	6,  // 11: marketdatapublicv1.MarketDataPublic.Logout:input_type -> marketdatapublicv1.LogoutRequest
+	8,  // 12: marketdatapublicv1.MarketDataPublic.ListSymbolGroups:input_type -> marketdatapublicv1.ListSymbolGroupsRequest
+	11, // 13: marketdatapublicv1.MarketDataPublic.ListSymbols:input_type -> marketdatapublicv1.ListSymbolsRequest
+	15, // 14: marketdatapublicv1.MarketDataPublic.StreamTicks:input_type -> marketdatapublicv1.SubscribeRequest
+	18, // 15: marketdatapublicv1.MarketDataPublic.GetHistorical:input_type -> marketdatapublicv1.HistoricalRequest
+	4,  // 16: marketdatapublicv1.MarketDataPublic.Authenticate:output_type -> marketdatapublicv1.AuthResponse
+	4,  // 17: marketdatapublicv1.MarketDataPublic.RefreshToken:output_type -> marketdatapublicv1.AuthResponse
+	7,  // 18: marketdatapublicv1.MarketDataPublic.Logout:output_type -> marketdatapublicv1.LogoutResponse
+	9,  // 19: marketdatapublicv1.MarketDataPublic.ListSymbolGroups:output_type -> marketdatapublicv1.SymbolGroupList
+	12, // 20: marketdatapublicv1.MarketDataPublic.ListSymbols:output_type -> marketdatapublicv1.SymbolList
+	17, // 21: marketdatapublicv1.MarketDataPublic.StreamTicks:output_type -> marketdatapublicv1.TickBatch
+	19, // 22: marketdatapublicv1.MarketDataPublic.GetHistorical:output_type -> marketdatapublicv1.Candle
+	16, // [16:23] is the sub-list for method output_type
+	9,  // [9:16] is the sub-list for method input_type
+	9,  // [9:9] is the sub-list for extension type_name
+	9,  // [9:9] is the sub-list for extension extendee
+	0,  // [0:9] is the sub-list for field type_name
 }
 
 func init() { file_marketdata_public_v1_marketdata_public_proto_init() }
@@ -1413,7 +1789,7 @@ func file_marketdata_public_v1_marketdata_public_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_marketdata_public_v1_marketdata_public_proto_rawDesc), len(file_marketdata_public_v1_marketdata_public_proto_rawDesc)),
 			NumEnums:      3,
-			NumMessages:   16,
+			NumMessages:   17,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

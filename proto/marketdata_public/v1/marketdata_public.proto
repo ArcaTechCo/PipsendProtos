@@ -131,16 +131,71 @@ message SymbolList {
 }
 
 message Symbol {
-  string code = 1;          // Provider-canonical code, e.g. "EURUSD.i"
-  string display_name = 2;  // "EUR/USD"
+  // === Identity ===
+  string code = 1;             // Symbol code, e.g. "EURUSD"
+  string display_name = 2;     // Human-friendly, e.g. "EUR/USD"
   string description = 3;
-  AssetClass asset_class = 4;
+  AssetClass asset_class = 4;  // Canonical taxonomy
+  string asset_type = 30;      // Raw asset_type from DB (forex|crypto|metals|...)
+  bool is_active = 31;
+
+  // === Grouping & currencies ===
   optional uint64 group_id = 5;
-  string group_name = 6;    // Convenience copy of the group's name
+  string group_name = 6;
+  uint64 currency_id = 32;
+  string base_currency_code = 33;
+  string quote_currency_code = 34;
+
+  // === Pricing precision ===
   int32 digits = 7;
-  // Trading metadata, sent as decimal strings to preserve precision.
   string contract_size = 8;
   string tick_size = 9;
+  string step = 35;
+  string point_value = 36;
+
+  // === Trade sizing ===
+  string min_trade_size = 37;
+  string max_trade_size = 38;
+  string volume_min = 39;
+  string volume_max = 40;
+  string volume_step = 41;
+
+  // === Margin / spread ===
+  string margin = 42;
+  string required_margin = 43;
+  string spread = 44;
+  string spread_balance = 45;
+
+  // === Costs / P&L knobs ===
+  string swap = 46;
+  string profit = 47;
+  string loss = 48;
+  string percent = 49;
+  string percentage = 50;
+
+  // === Execution & UI ===
+  string execution_mode = 51;     // "market" | "instant"
+  int32 default_position = 52;    // UI ordering
+  bool is_default_favorite = 53;
+  string metadata_json = 54;      // Free-form JSON serialized to string
+
+  // === Trading hours ===
+  repeated TradeSession trade_sessions = 55;
+
+  // === Timestamps (Unix ms) ===
+  int64 created_at = 56;
+  int64 updated_at = 57;
+}
+
+// TradeSession is one weekday's quoting+trading window.
+message TradeSession {
+  string day_id = 1;       // "sunday".."saturday"
+  string day_name = 2;     // "Sunday".."Saturday"
+  bool enabled = 3;
+  string quotes_start = 4; // "HH:MM"
+  string quotes_end = 5;
+  string trade_start = 6;
+  string trade_end = 7;
 }
 
 // ============================================================================
