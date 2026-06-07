@@ -129,6 +129,25 @@ message SymbolInfo {
   bool is_active = 13;            // Whether the symbol is active
   string point_value = 14;        // Point value: "10.00" (value per point movement)
   MarketRouteInfo market_route = 15;  // Market route to provider (null if no route exists)
+
+  // Swap / rollover (financing) configuration. Charged nightly per
+  // open position. swap_long applies to BUY positions, swap_short
+  // to SELL. Empty / zero means "no swap" — the engine skips the
+  // position on the nightly tick.
+  //
+  // swap_mode controls how the rate is interpreted:
+  //   "" / "currency" → amount = rate * qty * contract_size in swap_currency
+  //   "points"        → amount = rate * tick_size * qty * contract_size in quote_currency
+  //   "interest"      → amount = used_margin * rate / (100 * 360) in account_currency
+  //                     (annual percentage rate over the used margin)
+  string swap_long = 16;          // e.g. "-2.5" (charge $2.50 per lot per day)
+  string swap_short = 17;         // e.g. "0.8"  (credit $0.80 per lot per day)
+  string swap_currency = 18;      // Currency the swap is denominated in (often the account currency)
+  // Day of week (0=Sunday, …, 6=Saturday) on which the swap is
+  // charged triple to cover the weekend roll. -1 disables the
+  // triple-swap rule for this symbol.
+  int32 triple_swap_day = 19;
+  string swap_mode = 20;          // "" / "currency" / "points" / "interest"
 }
 
 // GetSymbolResponse returns a single symbol
